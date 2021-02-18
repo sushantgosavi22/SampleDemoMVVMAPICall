@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">SampleDemoMVVMAPICall</string>
+    <string name="app_name">Food Order App</string>
+    <string name="finish_order">FINISH ORDER</string>
+    <string name="customer_details">Customer Details</string>
+    <string name="order_details">Order Details</string>
+    <string name="customer_name">Customer Name :</string>
+    <string name="customer_address">Customer Address :</string>
+    <string name="customer_city">City :</string>
+    <string name="customer_state">State :</string>
+    <string name="customer_zip">Zip :</string>
+    <string name="customer_number">Number :</string>
+    <string name="schedule_date">Schedule Date :</string>
+    <string name="last_updated_date">Last Update :</string>
+    <string name="service_requested">Service Requested :</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="list_not_found">Customer List not found!</string>
+    <string name="no_internet_connection">Please check your Internet Connection and Try again.</string>
 </resources>
