@@ -7,12 +7,12 @@
     <data>
 
         <variable
-            name="responseItem"
-            type="com.sushant.sampledemomvvmapicall.model.Customers" />
+            name="item"
+            type="com.sushant.sampledemomvvmapicall.model.ProfilerItemData" />
 
         <variable
             name="listener"
-            type="com.sushant.sampledemomvvmapicall.views.details.ui.IOnFinishOrderClickListener" />
+            type="com.sushant.sampledemomvvmapicall.views.details.ui.IOnDoneClickListener" />
     </data>
 
     <RelativeLayout
@@ -22,8 +22,9 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/btnFinishOrderButton"
+            android:layout_above="@+id/btnAddButton"
             android:layout_alignParentTop="true">
+
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -48,389 +49,98 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
+
                             <com.google.android.material.imageview.ShapeableImageView
                                 android:id="@+id/image"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/dp_270"
                                 android:scaleType="fitXY"
                                 app:cornerFamily="rounded"
                                 app:cornerSize="@dimen/dp_10"
                                 app:cornerSizeBottomLeft="0dp"
                                 app:cornerSizeBottomRight="0dp"
                                 app:srcCompat="@drawable/flower"
-                                bind:loadUrl="@{responseItem.imageUrl}" />
+                                android:onClick="@{() ->listener.onImageClick()}"
+                                bind:loadUrl="@{item.avatar}" />
 
-                            <RelativeLayout
-                                android:id="@+id/itemCard"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/dp_5"
-                                android:padding="@dimen/dp_5">
-
-
-                                <androidx.appcompat.widget.LinearLayoutCompat
-                                    android:id="@+id/data"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_toLeftOf="@+id/llActive"
-                                    android:orientation="vertical">
-
-                                    <androidx.appcompat.widget.AppCompatTextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="@dimen/dp_5"
-                                        android:gravity="center"
-                                        android:text="@string/customer_details"
-                                        android:textColor="@android:color/black"
-                                        android:textSize="@dimen/sp_30"
-                                        android:textStyle="bold" />
-
-                                    <androidx.appcompat.widget.LinearLayoutCompat
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="5"
-                                            android:text="@string/customer_name"
-                                            android:textColor="@android:color/darker_gray"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:id="@+id/tvHeadline"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_gravity="center"
-                                            android:layout_marginLeft="@dimen/dp_20"
-                                            android:layout_weight="5"
-                                            android:textColor="@android:color/black"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold"
-                                            bind:loadTitle="@{responseItem}" />
-
-                                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                                    <androidx.appcompat.widget.LinearLayoutCompat
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_10"
-                                        android:orientation="horizontal">
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="5"
-                                            android:text="@string/customer_address"
-                                            android:textColor="@android:color/darker_gray"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:id="@+id/tvAddress"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/dp_20"
-                                            android:layout_marginBottom="@dimen/dp_5"
-                                            android:layout_weight="5"
-                                            android:text="@{responseItem.customer.address}"
-                                            android:textColor="@android:color/black"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-                                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                                    <androidx.appcompat.widget.LinearLayoutCompat
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_10"
-                                        android:orientation="horizontal">
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="5"
-                                            android:text="@string/customer_city"
-                                            android:textColor="@android:color/darker_gray"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:id="@+id/tvCity"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/dp_20"
-                                            android:layout_marginBottom="@dimen/dp_5"
-                                            android:layout_weight="5"
-                                            android:text="@{responseItem.customer.city}"
-                                            android:textColor="@android:color/black"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-                                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                                    <androidx.appcompat.widget.LinearLayoutCompat
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_10"
-                                        android:orientation="horizontal">
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="5"
-                                            android:text="@string/customer_state"
-                                            android:textColor="@android:color/darker_gray"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:id="@+id/tvState"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/dp_20"
-                                            android:layout_marginBottom="@dimen/dp_5"
-                                            android:layout_weight="5"
-                                            android:text="@{responseItem.customer.state}"
-                                            android:textColor="@android:color/black"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-                                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                                    <androidx.appcompat.widget.LinearLayoutCompat
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_10"
-                                        android:orientation="horizontal">
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="5"
-                                            android:text="@string/customer_zip"
-                                            android:textColor="@android:color/darker_gray"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:id="@+id/tvZip"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/dp_20"
-                                            android:layout_marginBottom="@dimen/dp_5"
-                                            android:layout_weight="5"
-                                            android:text="@{responseItem.customer.zip}"
-                                            android:textColor="@android:color/black"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-                                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                                    <androidx.appcompat.widget.LinearLayoutCompat
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_10"
-                                        android:orientation="horizontal">
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="5"
-                                            android:text="@string/customer_number"
-                                            android:textColor="@android:color/darker_gray"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-
-                                        <androidx.appcompat.widget.AppCompatTextView
-                                            android:id="@+id/tvPhoneNumber"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="@dimen/dp_20"
-                                            android:layout_marginBottom="@dimen/dp_5"
-                                            android:layout_weight="5"
-                                            android:text="@{responseItem.customer.phoneNumber}"
-                                            android:textColor="@android:color/black"
-                                            android:textSize="@dimen/sp_16"
-                                            android:textStyle="bold" />
-
-                                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                                </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                                <androidx.appcompat.widget.LinearLayoutCompat
-                                    android:id="@+id/llActive"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentTop="true"
-                                    android:layout_alignParentRight="true"
-                                    android:orientation="vertical">
-
-                                    <androidx.appcompat.widget.AppCompatImageView
-                                        android:id="@+id/ivActive"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="@dimen/dp_5"
-                                        bind:loadActive="@{responseItem.isActive}" />
-                                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                            </RelativeLayout>
-
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/dp_10"
-                        android:elevation="@dimen/dp_10"
-                        app:cardCornerRadius="@dimen/dp_10"
-                        app:cardPreventCornerOverlap="false"
-                        app:cardUseCompatPadding="false">
-
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="@dimen/dp_5"
-                                android:background="@android:color/darker_gray"
                                 android:gravity="center"
-                                android:text="@string/order_details"
+                                android:text="@string/user_details"
                                 android:textColor="@android:color/black"
                                 android:textSize="@dimen/sp_30"
                                 android:textStyle="bold" />
 
-                            <androidx.appcompat.widget.LinearLayoutCompat
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/dp_5"
-                                android:orientation="vertical">
+                            <com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout
+                                style="@style/Outlined.Theme"
+                                android:hint="@string/firstName">
 
-                                <androidx.appcompat.widget.LinearLayoutCompat
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/edtFirstName"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:orientation="horizontal">
+                                    android:textColor="@color/black"
+                                    android:inputType="textPersonName"
+                                    android:maxLines="1"
+                                    bind:viewEnable="@{item.id}"
+                                    android:text="@={item.first_name}"
+                                    android:textColorHint="@color/black" />
+                            </com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout>
 
-                                    <androidx.appcompat.widget.AppCompatTextView
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="5"
-                                        android:text="@string/schedule_date"
-                                        android:textColor="@android:color/darker_gray"
-                                        android:textSize="@dimen/sp_16"
-                                        android:textStyle="bold" />
+                            <com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout
+                                style="@style/Outlined.Theme"
+                                android:hint="@string/last_name">
 
-
-                                    <androidx.appcompat.widget.AppCompatTextView
-                                        android:id="@+id/tvScheduledDate"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/dp_20"
-                                        android:layout_marginBottom="@dimen/dp_5"
-                                        android:layout_weight="5"
-                                        android:textColor="@android:color/black"
-                                        android:textSize="@dimen/sp_16"
-                                        android:textStyle="bold"
-                                        bind:loadScheduleDate="@{responseItem.scheduleDate}" />
-
-                                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                                <androidx.appcompat.widget.LinearLayoutCompat
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/edtLastName"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:orientation="horizontal">
+                                    android:inputType="textPersonName"
+                                    android:textColor="@color/black"
+                                    android:text="@={item.last_name}"
+                                    bind:viewEnable="@{item.id}"
+                                    android:maxLines="1"
+                                    android:textColorHint="@color/black" />
+                            </com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout>
 
-                                    <androidx.appcompat.widget.AppCompatTextView
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="5"
-                                        android:text="@string/last_updated_date"
-                                        android:textColor="@android:color/darker_gray"
-                                        android:textSize="@dimen/sp_16"
-                                        android:textStyle="bold" />
+                            <com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout
+                                style="@style/Outlined.Theme"
+                                android:hint="@string/email">
 
-
-                                    <androidx.appcompat.widget.AppCompatTextView
-                                        android:id="@+id/tvLastUpdatedDate"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/dp_20"
-                                        android:layout_marginBottom="@dimen/dp_5"
-                                        android:layout_weight="5"
-                                        android:textColor="@android:color/black"
-                                        android:textSize="@dimen/sp_16"
-                                        android:textStyle="bold"
-                                        bind:loadScheduleDate="@{responseItem.lastUpdateDate}" />
-
-                                </androidx.appcompat.widget.LinearLayoutCompat>
-                                <androidx.appcompat.widget.LinearLayoutCompat
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/edtEmail"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:orientation="horizontal">
+                                    android:inputType="textEmailAddress"
+                                    android:textColor="@color/black"
+                                    bind:viewEnable="@{item.id}"
+                                    android:text="@={item.email}"
+                                    android:maxLines="1"
+                                    android:textColorHint="@color/black" />
 
-                                    <androidx.appcompat.widget.AppCompatTextView
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="5"
-                                        android:text="@string/service_requested"
-                                        android:textColor="@android:color/darker_gray"
-                                        android:textSize="@dimen/sp_16"
-                                        android:textStyle="bold" />
+                            </com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout>
 
-
-                                    <androidx.appcompat.widget.AppCompatTextView
-                                        android:id="@+id/tvServiceRequest"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/dp_20"
-                                        android:layout_marginBottom="@dimen/dp_5"
-                                        android:layout_weight="5"
-                                        android:textColor="@android:color/black"
-                                        android:textSize="@dimen/sp_16"
-                                        android:textStyle="bold"
-                                        android:text="@{responseItem.serviceRequested}" />
-
-                                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                            </androidx.appcompat.widget.LinearLayoutCompat>
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
+                        </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </androidx.appcompat.widget.LinearLayoutCompat>
-
-
             </ScrollView>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFinishOrderButton"
+            android:id="@+id/btnAddButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/dp_20"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{() ->listener.onFinishOrderClick()}"
-            android:text="@string/finish_order"
+            bind:buttonVisibility="@{item.id}"
+            android:onClick="@{() ->listener.onDoneClick()}"
+            android:text="@string/add"
             tools:ignore="UnusedAttribute" />
     </RelativeLayout>
 

@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 30
@@ -9,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.sushant.sampledemomvvmapicall"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -47,13 +48,15 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.dhaval2404:imagepicker-support:1.7.1'
+    implementation 'com.github.florent37:inline-activity-result-kotlin:1.0.4'
 
     annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
     implementation 'android.arch.lifecycle:extensions:1.1.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-
+    implementation 'com.karumi:dexter:5.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

@@ -14,7 +14,7 @@ import java.util.*
 object Utils {
 
     const val KEY_REQUEST_ID : Int = 101
-    const val KEY_CUSTOMERS : String ="Customers"
+    const val KEY_ITEM : String ="item"
 
 
     fun showToast(context: Context?, message: String?) {

@@ -1,10 +1,14 @@
 package com.sushant.sampledemomvvmapicall.service.interfaces
 import com.sushant.sampledemomvvmapicall.model.OrderResponse
+import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 
 interface ApiInterface {
-    @GET("5c8b7873360000881d8f80ed")
-    fun getOrderList(): Call<OrderResponse>
+
+    @GET("users")
+    fun getUsers(@Query("page") page: Int?): Call<ProfilerResponse>
+
 }

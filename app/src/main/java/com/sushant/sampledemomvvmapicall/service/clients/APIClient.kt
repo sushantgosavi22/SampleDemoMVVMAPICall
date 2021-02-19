@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class APIClient {
 
     companion object {
-        private const val baseURL: String = "http://www.mocky.io/v2/"
+        private const val baseURL: String = "https://reqres.in/api/"
         val client: Retrofit by lazy {
             Retrofit.Builder()
                 .baseUrl(baseURL)

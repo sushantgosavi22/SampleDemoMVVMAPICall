@@ -1,12 +1,17 @@
 package com.sushant.sampledemomvvmapicall.views.base
 
+import android.net.Uri
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.sushant.sampledemomvvmapicall.R
-import com.sushant.sampledemomvvmapicall.constant.Utils
-import com.sushant.sampledemomvvmapicall.model.Customers
+import java.io.File
+
 
 object Binder {
 
@@ -14,69 +19,43 @@ object Binder {
     @JvmStatic
     public fun bindUrlImage(view: ImageView, url: String?) {
         url?.let {
-            Glide.with(view)
-                .load(url)
-                .placeholder(R.drawable.flower)
-                .error(R.drawable.flower)
-                .into(view)
+            if(url.contains("http")){
+                Glide.with(view)
+                    .load(url)
+                    .placeholder(R.drawable.flower)
+                    .error(R.drawable.flower)
+                    .into(view)
+            }else{
+                Glide.with(view)
+                    .load(Uri.fromFile(File(url)))
+                    .placeholder(R.drawable.flower)
+                    .error(R.drawable.flower)
+                    .into(view)
+            }
         }
     }
 
-    @BindingAdapter("bind:loadActive")
+
+    @BindingAdapter(value = ["bind:firstName", "bind:lastName"], requireAll = false)
     @JvmStatic
-    public fun bindBookmarkImage(view: ImageView, bookmarked: Boolean?) {
-        bookmarked?.let {
-            view.setBackgroundResource(
-                if (it) {
-                    R.drawable.red_dot
-                } else {
-                    R.drawable.green_dot
-                }
-            )
-        }
+    public fun bindTitle(view: TextView, firstName : String?, lastName : String?) {
+        var result: String = firstName?.plus(" ".plus(lastName?:""))?:lastName?:""
+        view.text = result
     }
 
-    @BindingAdapter("bind:loadTitle")
+
+
+
+    @BindingAdapter("bind:buttonVisibility")
     @JvmStatic
-    public fun bindTitle(view: TextView, customers: Customers?) {
-        customers?.let {
-            var result: String = ""
-            val customer = customers.customer
-            val firstName = customer?.firstName
-            val lastName = customer?.lastName
-            result = firstName?.plus(" ").plus(lastName)
-            view.text = result
-        }
+    public fun bindButtonVisibility(view: Button, item: Int?) {
+        view.visibility =if(item==null)View.VISIBLE else View.GONE
     }
 
-    @BindingAdapter("bind:loadAddress")
+    @BindingAdapter("bind:viewEnable")
     @JvmStatic
-    public fun bindAddress(view: TextView, customers: Customers?) {
-        customers?.let {
-            var result: String = ""
-            val customer = customers.customer
-            val address = customer?.address
-            val city = customer?.city
-            val state = customer?.state
-            val zip = customer?.zip
-            result = address?.plus(", ").plus(city).plus(", ").plus(state).plus(" ").plus(zip)
-            view.text = result
-        }
-    }
-
-    @BindingAdapter("bind:loadScheduleDate")
-    @JvmStatic
-    public fun bindScheduleDate(view: TextView, string: String?) {
-        string?.let {
-            view.text = Utils.getLocalFormatterDate(Utils.getScheduleTime(string))
-        }
-    }
-
-    @BindingAdapter("bind:loadScheduleEndTime")
-    @JvmStatic
-    public fun bindScheduleEndTime(view: TextView, string: String?) {
-        string?.let {
-            view.text = Utils.getLocalFormattedTime(string)
-        }
+    public fun bindViewEnable(view: EditText, item: Int?) {
+        view.isEnabled =(item==null)
+        view.isFocusable = (item==null)
     }
 }
