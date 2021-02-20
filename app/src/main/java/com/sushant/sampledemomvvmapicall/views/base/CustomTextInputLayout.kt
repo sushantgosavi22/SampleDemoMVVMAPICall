@@ -18,6 +18,8 @@ open class CustomTextInputLayout : TextInputLayout {
     }
 
     private fun init(context: Context, attrs: AttributeSet?){
-
+        //This app not having more functionality but in the case we require lot of view
+        //end some of them /all of them required some common functionality
+        //then this class give me flexibility to adapt
     }
 }

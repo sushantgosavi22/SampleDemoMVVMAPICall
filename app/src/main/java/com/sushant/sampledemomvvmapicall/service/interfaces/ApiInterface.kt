@@ -1,5 +1,4 @@
 package com.sushant.sampledemomvvmapicall.service.interfaces
-import com.sushant.sampledemomvvmapicall.model.OrderResponse
 import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
 import retrofit2.Call
 import retrofit2.http.GET

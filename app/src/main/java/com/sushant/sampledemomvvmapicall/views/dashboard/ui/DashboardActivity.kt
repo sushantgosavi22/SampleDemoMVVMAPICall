@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,16 +15,18 @@ import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.databinding.ActivityDashboardBinding
 import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
+import com.sushant.sampledemomvvmapicall.views.adapter.BaseViewHolder
 import com.sushant.sampledemomvvmapicall.views.adapter.ItemAdapter
+import com.sushant.sampledemomvvmapicall.views.adapter.NewsViewHolder
 import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel
 import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.IListCallBack
 import com.sushant.sampledemomvvmapicall.views.details.ui.DetailsActivity
 
-class DashboardActivity : BaseActivity(), ItemAdapter.IOnItemClickListener, IListCallBack {
+class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<ProfilerItemData>, IListCallBack {
 
     private lateinit var dashboardViewModel: DashboardViewModel
-    private var adapter: ItemAdapter? = null
+    private var adapter: ItemAdapter<ProfilerItemData,NewsViewHolder>? = null
     lateinit var binding: ActivityDashboardBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +78,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IOnItemClickListener, ILis
         hideProgressBar()
     }
 
-    override fun onOrderClick(pos: Int, data: ProfilerItemData?) {
+    override fun onItemClick(pos: Int, data: ProfilerItemData?) {
         openDetailActivity(data)
     }
 
@@ -106,5 +109,9 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IOnItemClickListener, ILis
         var intent = Intent(this, DetailsActivity::class.java)
         intent.putExtra(Utils.KEY_ITEM, item)
         startActivityForResult(intent, Utils.KEY_REQUEST_ID)
+    }
+
+    override fun getHolder(parent: ViewGroup): BaseViewHolder<ProfilerItemData> {
+        return NewsViewHolder.getInstance(parent)
     }
 }
