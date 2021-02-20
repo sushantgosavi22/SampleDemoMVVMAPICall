@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.karumi.dexter.Dexter
@@ -18,11 +19,9 @@ import com.sushant.sampledemomvvmapicall.databinding.ActivityDetailsBinding
 import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
 import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.details.viewmodel.DetailsViewModel
-import com.sushant.sampledemomvvmapicall.views.details.viewmodel.ISaveUserCallback
 import java.io.File
 
-class DetailsActivity : BaseActivity(), IOnDoneClickListener, ISaveUserCallback,
-    PermissionListener {
+class DetailsActivity : BaseActivity(), IOnDoneClickListener, PermissionListener {
     private lateinit var mDetailsViewModel: DetailsViewModel
     lateinit var binding: ActivityDetailsBinding
     val data: ProfilerItemData?
@@ -35,6 +34,7 @@ class DetailsActivity : BaseActivity(), IOnDoneClickListener, ISaveUserCallback,
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_details)
         mDetailsViewModel = ViewModelProviders.of(this).get(DetailsViewModel::class.java)
+        binding.viewModel = mDetailsViewModel
         binding.listener = this
         binding.item = data
     }
@@ -42,7 +42,16 @@ class DetailsActivity : BaseActivity(), IOnDoneClickListener, ISaveUserCallback,
     override fun onDoneClick() {
         if (validate()) {
             showProgressBar()
-            mDetailsViewModel.saveUser(binding.item, this)
+            mDetailsViewModel.getSaveUserCallBack().observe(this, Observer {
+                hideProgressBar()
+                if (it != null) {
+                    Utils.showToast(this, it.message ?: getString(R.string.unexpected_error))
+                } else {
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+            })
+            mDetailsViewModel.saveUser(binding.item)
         }
     }
 
@@ -53,15 +62,6 @@ class DetailsActivity : BaseActivity(), IOnDoneClickListener, ISaveUserCallback,
             .check()
     }
 
-    override fun onCallBack(success: Boolean, t: Throwable?) {
-        hideProgressBar()
-        if (success) {
-            setResult(Activity.RESULT_OK)
-            finish()
-        } else {
-            Utils.showToast(this, t?.message ?: getString(R.string.unexpected_error))
-        }
-    }
 
     private fun validate(): Boolean {
         val data = binding.item

@@ -2,10 +2,10 @@ package com.sushant.sampledemomvvmapicall.repositorys.userrepo
 
 import android.content.Context
 import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
-import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.IListCallBack
-import com.sushant.sampledemomvvmapicall.views.details.viewmodel.ISaveUserCallback
+import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
+import io.reactivex.Single
 
 interface IUserRepository {
-    fun getUsers(context: Context, page: Int, mIListCallBack: IListCallBack)
-    fun saveUser(data : ProfilerItemData?, mISaveUserCallback: ISaveUserCallback)
+    fun getUsers(context: Context, page: Int) : Single<ProfilerResponse>
+    fun saveUser(data : ProfilerItemData?) : Single<Boolean>
 }

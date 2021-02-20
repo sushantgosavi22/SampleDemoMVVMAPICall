@@ -1,9 +1,9 @@
 package com.sushant.sampledemomvvmapicall.views.base
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.sushant.sampledemomvvmapicall.R
 import kotlinx.android.synthetic.main.activity_dashboard.*

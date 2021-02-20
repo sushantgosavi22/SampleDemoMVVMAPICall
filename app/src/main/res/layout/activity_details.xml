@@ -11,6 +11,10 @@
             type="com.sushant.sampledemomvvmapicall.model.ProfilerItemData" />
 
         <variable
+            name="viewModel"
+            type="com.sushant.sampledemomvvmapicall.views.details.viewmodel.DetailsViewModel" />
+
+        <variable
             name="listener"
             type="com.sushant.sampledemomvvmapicall.views.details.ui.IOnDoneClickListener" />
     </data>
@@ -85,7 +89,8 @@
                                     android:textColor="@color/black"
                                     android:inputType="textPersonName"
                                     android:maxLines="1"
-                                    bind:viewEnable="@{item.id}"
+                                    bind:itemId="@{item.id}"
+                                    bind:viewModel="@{viewModel}"
                                     android:text="@={item.first_name}"
                                     android:textColorHint="@color/black" />
                             </com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout>
@@ -101,7 +106,8 @@
                                     android:inputType="textPersonName"
                                     android:textColor="@color/black"
                                     android:text="@={item.last_name}"
-                                    bind:viewEnable="@{item.id}"
+                                    bind:itemId="@{item.id}"
+                                    bind:viewModel="@{viewModel}"
                                     android:maxLines="1"
                                     android:textColorHint="@color/black" />
                             </com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout>
@@ -116,7 +122,8 @@
                                     android:layout_height="wrap_content"
                                     android:inputType="textEmailAddress"
                                     android:textColor="@color/black"
-                                    bind:viewEnable="@{item.id}"
+                                    bind:itemId="@{item.id}"
+                                    bind:viewModel="@{viewModel}"
                                     android:text="@={item.email}"
                                     android:maxLines="1"
                                     android:textColorHint="@color/black" />
@@ -139,6 +146,7 @@
             android:clickable="true"
             android:focusable="true"
             bind:buttonVisibility="@{item.id}"
+            bind:viewModel="@{viewModel}"
             android:onClick="@{() ->listener.onDoneClick()}"
             android:text="@string/add"
             tools:ignore="UnusedAttribute" />
