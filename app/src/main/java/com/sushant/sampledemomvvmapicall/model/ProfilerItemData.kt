@@ -10,6 +10,7 @@ open class ProfilerItemData : RealmObject(), Serializable {
     var first_name: String? = null
     var id: Int? = null
     var last_name: String? = null
+    var isActive: Boolean = false
 
     companion object {
         public var callBack = object : DiffUtil.ItemCallback<ProfilerItemData>() {

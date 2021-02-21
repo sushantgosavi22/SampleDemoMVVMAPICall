@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Wipro News Feed</string>
+    <string name="app_name">Profiler App</string>
     <string name="unexpected_error">Unexpected Behaviour contact administrator!</string>
     <string name="list_not_found">List not found!</string>
     <string name="validation_failed">Please Fill all the fields.</string>

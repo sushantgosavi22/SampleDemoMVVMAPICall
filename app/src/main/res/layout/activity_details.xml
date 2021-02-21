@@ -49,6 +49,7 @@
                         app:cardUseCompatPadding="false">
 
                         <LinearLayout
+                            android:layout_gravity="right"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
@@ -67,6 +68,14 @@
                                 android:onClick="@{() ->listener.onImageClick()}"
                                 bind:loadUrl="@{item.avatar}" />
 
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/ivActive"
+                                android:layout_gravity="right"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/dp_5"
+                                bind:loadActive="@{item.isActive}" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:layout_width="match_parent"
