@@ -17,6 +17,7 @@ object APIClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
+
     }
 
     private val okHttpClient by lazy {
