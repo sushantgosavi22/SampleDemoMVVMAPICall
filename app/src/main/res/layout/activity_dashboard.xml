@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <data>
+        <variable
+            name="viewModel"
+            type="com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel" />
+    </data>
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/errorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawablePadding="16dp"
+            android:drawableTop="@android:drawable/stat_notify_error"
+            android:padding="16dp"
+            android:text="@string/user_list_error"
+            android:visibility="gone"/>
+
+        <com.sushant.sampledemomvvmapicall.views.base.CustomSwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
+            app:refreshing="@{viewModel.isLoading()}"
+            app:onRefreshListener="@{() ->viewModel.onRefresh()}"
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
+                android:scrollbars="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/emptyView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:text="@string/list_not_found"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+        </com.sushant.sampledemomvvmapicall.views.base.CustomSwipeRefreshLayout>
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone" />
-        </RelativeLayout>
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
 </layout>

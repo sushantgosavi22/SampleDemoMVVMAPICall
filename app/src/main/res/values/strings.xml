@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">User Profiler</string>
+    <string name="app_name">Wipro News Feed</string>
     <string name="unexpected_error">Unexpected Behaviour contact administrator!</string>
     <string name="list_not_found">List not found!</string>
     <string name="validation_failed">Please Fill all the fields.</string>
     <string name="no_internet_connection">Please check your Internet Connection and Try again.</string>
     <string name="permission_required">Enable to proceed. Please allow all the permission required.</string>
-
+    <string name="user_list_error">Failed to load data. Refresh to try again</string>
 
 
     <string name="add">add</string>
@@ -13,5 +13,6 @@
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
     <string name="user_details">User Details</string>
+    <string name="loading">Loading...</string>
 
 </resources>

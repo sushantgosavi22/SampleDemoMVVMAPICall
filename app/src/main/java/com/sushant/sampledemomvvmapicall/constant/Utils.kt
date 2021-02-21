@@ -17,6 +17,7 @@ object Utils {
     const val KEY_REQUEST_ID: Int = 101
     const val KEY_ITEM: String = "item"
     const val FIRST_PAGE: Int = 1
+    const val PAGE_SIZE = 10
 
 
     fun showToast(context: Context?, message: String?) {

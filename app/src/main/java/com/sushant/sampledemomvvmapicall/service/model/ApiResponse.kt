@@ -23,5 +23,15 @@ public class ApiResponse<T>  {
         fun <T>  error(error: Throwable?): ApiResponse<T>? {
             return ApiResponse(Status.ERROR, null, error)
         }
+
+        fun <T>  clearListAndHideError(): ApiResponse<T>? {
+            return ApiResponse(Status.CLEAR_LIST_HIDE_ERROR, null, null)
+        }
+
+        fun <T>  emptyList(): ApiResponse<T>? {
+            return ApiResponse(Status.SHOW_EMPTY_LIST, null, null)
+        }
+
+
     }
 }

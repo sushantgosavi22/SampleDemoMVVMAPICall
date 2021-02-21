@@ -2,24 +2,16 @@ package com.sushant.sampledemomvvmapicall.views.adapter
 
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import java.util.*
 
-class ItemAdapter<T, out H : BaseViewHolder<T>>(private var listener: IAdapterItemListener<T>) :
-        RecyclerView.Adapter<BaseViewHolder<T>>() {
+class ItemAdapter<T, out H : BaseViewHolder<T>>( private var listener: IAdapterItemListener<T>) : BasePaginationAdapter<T>() {
 
-    private val itemList = ArrayList<T>()
-    override fun getItemCount(): Int = itemList.size
-    override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) {
-        (holder as H).bind(itemList[position], position, listener)
+
+    fun clearDataItems() {
+        currentList?.clear()
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T> =listener.getHolder(parent)
-
-    fun setList(list: List<T>) {
-        this.itemList.clear()
-        this.itemList.addAll(list)
-        notifyDataSetChanged()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T> = listener.getHolder(parent)
+    override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) {
+       getItem(position)?.let { (holder as H).bind(it, position, listener) }
     }
 
     interface IAdapterItemListener<T> {

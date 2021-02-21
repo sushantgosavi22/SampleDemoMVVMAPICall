@@ -2,14 +2,13 @@ package com.sushant.sampledemomvvmapicall.views.base
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.sushant.sampledemomvvmapicall.R
-import kotlinx.android.synthetic.main.activity_dashboard.*
 
 open class BaseActivity : AppCompatActivity() {
-
+    private var dialog: AlertDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpActionBar()
@@ -28,11 +27,14 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun showProgressBar(){
-        progressBar?.visibility=View.VISIBLE
+        if (dialog == null)
+            dialog = AlertDialog.Builder(this).setCancelable(false).setView(R.layout.progress_dailog_layout).create()
+        dialog?.show()
     }
 
     fun hideProgressBar(){
-        progressBar?.visibility=View.GONE
+        if (dialog != null && dialog?.isShowing==true)
+            dialog?.hide()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -3,15 +3,16 @@ package com.sushant.sampledemomvvmapicall.views.dashboard.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.databinding.ActivityDashboardBinding
@@ -22,6 +23,7 @@ import com.sushant.sampledemomvvmapicall.service.model.Status
 import com.sushant.sampledemomvvmapicall.views.adapter.BaseViewHolder
 import com.sushant.sampledemomvvmapicall.views.adapter.ItemAdapter
 import com.sushant.sampledemomvvmapicall.views.adapter.NewsViewHolder
+import com.sushant.sampledemomvvmapicall.views.adapter.pagination.LoadInitial
 import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel
 import com.sushant.sampledemomvvmapicall.views.details.ui.DetailsActivity
@@ -29,21 +31,34 @@ import com.sushant.sampledemomvvmapicall.views.details.ui.DetailsActivity
 class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<ProfilerItemData> {
 
     private lateinit var dashboardViewModel: DashboardViewModel
-    private var adapter: ItemAdapter<ProfilerItemData,NewsViewHolder>? = null
     lateinit var binding: ActivityDashboardBinding
+
+    private val adapter by lazy {
+        ItemAdapter(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
+        binding.lifecycleOwner = this
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
+        binding.viewModel = dashboardViewModel
+        initAdapter()
         requestUserData()
     }
 
     private fun requestUserData() {
+        dashboardViewModel.getLoadCallback().observe(this, Observer {
+            val refresh = it is LoadInitial
+            dashboardViewModel.getUsers(refresh,it.pageValue,it)
+        })
         dashboardViewModel.getUserApiResponse().observe(this, Observer {
             consumeResponse(it)
         })
-        dashboardViewModel.getUsers(Utils.FIRST_PAGE)
+        dashboardViewModel.callPaginatedApi()
+        dashboardViewModel.getPagedList()?.observe(this, Observer {
+            adapter.submitList(it)
+        })
     }
 
     /*
@@ -51,47 +66,40 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
      * */
     private fun consumeResponse(apiResponse: ApiResponse<ProfilerResponse>?) {
         when (apiResponse?.status) {
-            Status.LOADING -> showProgressBar()
+            Status.LOADING -> dashboardViewModel.onShowLoading()
+            Status.CLEAR_LIST_HIDE_ERROR -> {
+                //adapter.clearDataItems()
+                showErrorView(false)
+            }
+            Status.SHOW_EMPTY_LIST -> showErrorView(true)
             Status.SUCCESS -> {
-                hideProgressBar()
-                val response =apiResponse.response as ProfilerResponse
-                setRecyclerView(response.data)
+                showErrorView(false)
+                dashboardViewModel.onStopLoading()
             }
             Status.ERROR -> {
-                hideProgressBar()
-                showEmptyView(true)
-                binding.emptyView.text = apiResponse.error?.message
+                dashboardViewModel.onStopLoading()
+                showErrorView(true)
                 Utils.showToast(this, apiResponse.error?.message)
             }
             else ->{
+                showErrorView(false)
                 hideProgressBar()
             }
         }
     }
-    private fun setRecyclerView(dataList: List<ProfilerItemData>?) {
-        dataList?.let {
-            showEmptyView(false)
-            adapter = ItemAdapter(this)
-            val layoutManager = LinearLayoutManager(this)
-            layoutManager.orientation = LinearLayoutManager.VERTICAL
-            binding.recyclerView.layoutManager = layoutManager
-            adapter?.setList(dataList)
-            binding.recyclerView.adapter = adapter
-        } ?: showEmptyView(true)
+
+    private fun showErrorView(error:Boolean){
+        binding.errorView.visibility = if(error) View.VISIBLE else View.GONE
     }
 
-    private fun showEmptyView(isEmpty: Boolean) {
-        binding.emptyView.visibility = if (isEmpty) {
-            VISIBLE
-        } else {
-            GONE
-        }
-        binding.recyclerView.visibility = if (isEmpty) {
-            GONE
-        } else {
-            VISIBLE
-        }
+    private fun initAdapter() {
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.setHasFixedSize(true)
     }
+
 
     override fun onItemClick(pos: Int, data: ProfilerItemData?) {
         openDetailActivity(data)
@@ -121,7 +129,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     }
 
     private fun openDetailActivity(item: ProfilerItemData?) {
-        var intent = Intent(this, DetailsActivity::class.java)
+        val intent = Intent(this, DetailsActivity::class.java)
         intent.putExtra(Utils.KEY_ITEM, item)
         startActivityForResult(intent, Utils.KEY_REQUEST_ID)
     }
