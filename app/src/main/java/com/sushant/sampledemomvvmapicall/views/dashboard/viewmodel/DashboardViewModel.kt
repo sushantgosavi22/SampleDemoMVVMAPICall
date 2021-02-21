@@ -30,7 +30,7 @@ class DashboardViewModel(application: Application) :
     fun getUsers(forcedRefresh: Boolean = false,isPaginationOn: Boolean = false, page: Int, callBack: PageLoadingCallBack? = null) {
         setCurrentPageLoading(true)
         val pageToRequest = if (forcedRefresh) Utils.FIRST_PAGE else page
-        mIUserRepository.getUsers(getApplication(), pageToRequest)
+        mIUserRepository.getUsers(getApplication(), pageToRequest,isPaginationOn)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { disposable -> mApiResponse.value = ApiResponse.loading() }
             .doFinally { setCurrentPageLoading(false) }
@@ -75,7 +75,7 @@ class DashboardViewModel(application: Application) :
                     when (it) {
                         is LoadInitial -> {
                             if (pageToRequest == Utils.FIRST_PAGE ) {
-                                it.callback.onResult(list, null, callBack.pageValue)
+                                it.callback.onResult(list, null, callBack.pageValue+1)
                             }else{
                                 it.callback.onResult(list, null, callBack.pageValue + 1)
                             }

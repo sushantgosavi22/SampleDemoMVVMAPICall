@@ -19,12 +19,23 @@ class UserRepository : IUserRepository {
     var mIServiceProvider: IServiceProvider = ServiceProvider
 
 
-    override fun getUsers(context: Context, page: Int): Single<ProfilerResponse> {
+    override fun getUsers(context: Context, page: Int,isPaginationOn: Boolean ): Single<ProfilerResponse> {
         return mIDatabaseProvider.getUsersFromDatabase()
             .flatMap {
-                when (it) {
-                    is DatabaseFailure -> getUsersResponse(context, page)
-                    is DatabaseSuccess -> Single.just(it.data)
+                /**
+                 * Here If you want to test pagination then we I need to allow only API call
+                 * because As per problem statment
+                 * [ if records are not present fetch record from above URL and. store in DB, also display records on the collection view]
+                 * if we store in db next consequence call got record from DB and API not call
+                 * So I have set flag for pagination that we call API only to test
+                 */
+                if(isPaginationOn.not()){
+                    when (it) {
+                        is DatabaseFailure -> getUsersResponse(context, page)
+                        is DatabaseSuccess -> Single.just(it.data)
+                    }
+                }else{
+                    getUsersResponse(context, page)
                 }
             }
     }

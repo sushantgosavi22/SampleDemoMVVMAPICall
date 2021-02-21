@@ -3,7 +3,6 @@ package com.sushant.sampledemomvvmapicall.views.dashboard.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.databinding.ActivityDashboardBinding
@@ -34,11 +32,11 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
      * This flag turn on pagination initially it is off because we save data in db after every api call
      * so lot of data stored in db
      *
-     * This API doesn't support pagination as it has no max page count, page number support so
-     * I call it repeatedly by by increasing page no So same data will show again and again
+     * This API doesn't support pagination as it has data upto two page
+     * means it doesn't return any data if page value is 3
+     * as well as  it has no max page count, page number support
      */
-    var isPaginationOn = false
-
+    private var isPaginationOn = false
     private lateinit var dashboardViewModel: DashboardViewModel
     lateinit var binding: ActivityDashboardBinding
     private val adapter by lazy {
