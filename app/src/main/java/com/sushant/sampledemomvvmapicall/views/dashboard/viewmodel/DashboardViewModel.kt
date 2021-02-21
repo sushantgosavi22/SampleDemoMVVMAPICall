@@ -27,7 +27,7 @@ class DashboardViewModel(application: Application) :
         ItemDataSourceFactory()
     }
 
-    fun getUsers(forcedRefresh: Boolean = false, page: Int, callBack: PageLoadingCallBack? = null) {
+    fun getUsers(forcedRefresh: Boolean = false,isPaginationOn: Boolean = false, page: Int, callBack: PageLoadingCallBack? = null) {
         setCurrentPageLoading(true)
         val pageToRequest = if (forcedRefresh) Utils.FIRST_PAGE else page
         mIUserRepository.getUsers(getApplication(), pageToRequest)
@@ -40,7 +40,7 @@ class DashboardViewModel(application: Application) :
                     if (pageToRequest == Utils.FIRST_PAGE) {
                         mApiResponse.value = ApiResponse.clearListAndHideError()
                     }
-                    handleRefreshCallBack(callBack, t,pageToRequest)
+                    handleRefreshCallBack(callBack, t,pageToRequest,isPaginationOn)
                     mApiResponse.value = ApiResponse.success(t)
                     incrementPageCount()
                 }
@@ -54,28 +54,46 @@ class DashboardViewModel(application: Application) :
             })
     }
 
-    fun handleRefreshCallBack(callBack: PageLoadingCallBack?, response: ProfilerResponse,pageToRequest : Int) {
-        callBack?.let {
-            response.data?.let { list ->
-                when (it) {
-                    is LoadInitial -> {
-                        if (pageToRequest == Utils.FIRST_PAGE ) {
-                            it.callback.onResult(list, null, callBack.pageValue)
-                        }else{
-                            it.callback.onResult(list, null, callBack.pageValue + 1)
+    fun handleRefreshCallBack(callBack: PageLoadingCallBack?, response: ProfilerResponse,pageToRequest : Int,isPaginationOn: Boolean) {
+        try {
+            callBack?.let {
+                if (isPaginationOn.not()) {
+                    when (it) {
+                        is LoadInitial -> {
+                            response.data?.let { list ->
+                                if (pageToRequest == Utils.FIRST_PAGE) {
+                                    it.callback.onResult(list, null, callBack.pageValue)
+                                } else {
+                                    it.callback.onResult(list, null, callBack.pageValue + 1)
+                                }
+                            }
                         }
                     }
-                    is LoadBefore -> it.callback.onResult(list, if (callBack.pageValue > 1) callBack.pageValue - 1 else 1)
-                    is LoadAfter -> it.callback.onResult(list, callBack.pageValue + 1)
+                    return
                 }
-            }
+                response.data?.let { list ->
+                    when (it) {
+                        is LoadInitial -> {
+                            if (pageToRequest == Utils.FIRST_PAGE ) {
+                                it.callback.onResult(list, null, callBack.pageValue)
+                            }else{
+                                it.callback.onResult(list, null, callBack.pageValue + 1)
+                            }
+                        }
+                        is LoadBefore -> it.callback.onResult(list, if (callBack.pageValue > 1) callBack.pageValue - 1 else 1)
+                        is LoadAfter -> it.callback.onResult(list, callBack.pageValue + 1)
+                    }
+                }
 
+            }
+        }catch (e : Exception){
+            e.printStackTrace()
         }
     }
 
     override fun onRefresh() {
         onShowLoading()
-        getUsers(true, Utils.FIRST_PAGE)
+
     }
 
     var itemPagedList : LiveData<PagedList<ProfilerItemData>>? = null

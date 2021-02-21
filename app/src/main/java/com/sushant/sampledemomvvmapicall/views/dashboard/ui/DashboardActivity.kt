@@ -30,9 +30,17 @@ import com.sushant.sampledemomvvmapicall.views.details.ui.DetailsActivity
 
 class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<ProfilerItemData> {
 
+    /**
+     * This flag turn on pagination initially it is off because we save data in db after every api call
+     * so lot of data stored in db
+     *
+     * This API doesn't support pagination as it has no max page count, page number support so
+     * I call it repeatedly by by increasing page no So same data will show again and again
+     */
+    var isPaginationOn = false
+
     private lateinit var dashboardViewModel: DashboardViewModel
     lateinit var binding: ActivityDashboardBinding
-
     private val adapter by lazy {
         ItemAdapter(this)
     }
@@ -50,7 +58,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     private fun requestUserData() {
         dashboardViewModel.getLoadCallback().observe(this, Observer {
             val refresh = it is LoadInitial
-            dashboardViewModel.getUsers(refresh,it.pageValue,it)
+            dashboardViewModel.getUsers(refresh,isPaginationOn,it.pageValue,it)
         })
         dashboardViewModel.getUserApiResponse().observe(this, Observer {
             consumeResponse(it)
@@ -68,7 +76,6 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
         when (apiResponse?.status) {
             Status.LOADING -> dashboardViewModel.onShowLoading()
             Status.CLEAR_LIST_HIDE_ERROR -> {
-                //adapter.clearDataItems()
                 showErrorView(false)
             }
             Status.SHOW_EMPTY_LIST -> showErrorView(true)
@@ -98,6 +105,10 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
         binding.recyclerView.setHasFixedSize(true)
+        binding.swipeRefreshLayout.setOnRefreshListener{
+            dashboardViewModel.onRefresh()
+            requestUserData()
+        }
     }
 
 

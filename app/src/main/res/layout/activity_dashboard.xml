@@ -26,7 +26,6 @@
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             app:refreshing="@{viewModel.isLoading()}"
-            app:onRefreshListener="@{() ->viewModel.onRefresh()}"
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
