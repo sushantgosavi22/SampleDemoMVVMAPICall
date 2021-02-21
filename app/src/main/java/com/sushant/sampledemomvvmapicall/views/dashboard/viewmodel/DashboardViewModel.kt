@@ -1,16 +1,13 @@
 package com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sushant.sampledemomvvmapicall.constant.Utils
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
-import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
+import com.sushant.sampledemomvvmapicall.model.ListItemData
+import com.sushant.sampledemomvvmapicall.model.ResponseModel
 import com.sushant.sampledemomvvmapicall.repositorys.userrepo.IUserRepository
 import com.sushant.sampledemomvvmapicall.repositorys.userrepo.UserRepository
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
@@ -20,22 +17,22 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 
 class DashboardViewModel(application: Application) :
-    BaseListViewModel<ProfilerItemData>(application) {
+    BaseListViewModel<ListItemData>(application) {
     var mIUserRepository: IUserRepository = UserRepository()
-    var mApiResponse = MutableLiveData<ApiResponse<ProfilerResponse>>()
+    var mApiResponse = MutableLiveData<ApiResponse<ResponseModel>>()
     private val itemDataSourceFactory by lazy {
         ItemDataSourceFactory()
     }
 
-    fun getUsers(forcedRefresh: Boolean = false,isPaginationOn: Boolean = false, page: Int, callBack: PageLoadingCallBack? = null) {
+    fun getList(forcedRefresh: Boolean = false, isPaginationOn: Boolean = false, page: Int, callBack: PageLoadingCallBack? = null) {
         setCurrentPageLoading(true)
         val pageToRequest = if (forcedRefresh) Utils.FIRST_PAGE else page
-        mIUserRepository.getUsers(getApplication(), pageToRequest)
+        mIUserRepository.getOrederList(getApplication(), pageToRequest)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { disposable -> mApiResponse.value = ApiResponse.loading() }
             .doFinally { setCurrentPageLoading(false) }
-            .subscribe(object : DisposableSingleObserver<ProfilerResponse>() {
-                override fun onSuccess(t: ProfilerResponse) {
+            .subscribe(object : DisposableSingleObserver<ResponseModel>() {
+                override fun onSuccess(t: ResponseModel) {
                     if (forcedRefresh) resetPaging()
                     if (pageToRequest == Utils.FIRST_PAGE) {
                         mApiResponse.value = ApiResponse.clearListAndHideError()
@@ -54,13 +51,13 @@ class DashboardViewModel(application: Application) :
             })
     }
 
-    fun handleRefreshCallBack(callBack: PageLoadingCallBack?, response: ProfilerResponse,pageToRequest : Int,isPaginationOn: Boolean) {
+    fun handleRefreshCallBack(callBack: PageLoadingCallBack?, responseModel: ResponseModel, pageToRequest : Int, isPaginationOn: Boolean) {
         try {
             callBack?.let {
                 if (isPaginationOn.not()) {
                     when (it) {
                         is LoadInitial -> {
-                            response.data?.let { list ->
+                            responseModel.customers?.let { list ->
                                 if (pageToRequest == Utils.FIRST_PAGE) {
                                     it.callback.onResult(list, null, callBack.pageValue)
                                 } else {
@@ -71,7 +68,7 @@ class DashboardViewModel(application: Application) :
                     }
                     return
                 }
-                response.data?.let { list ->
+                responseModel.customers?.let { list ->
                     when (it) {
                         is LoadInitial -> {
                             if (pageToRequest == Utils.FIRST_PAGE ) {
@@ -96,7 +93,7 @@ class DashboardViewModel(application: Application) :
 
     }
 
-    var itemPagedList : LiveData<PagedList<ProfilerItemData>>? = null
+    var itemPagedList : LiveData<PagedList<ListItemData>>? = null
     fun callPaginatedApi() {
         val config: PagedList.Config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
@@ -105,11 +102,11 @@ class DashboardViewModel(application: Application) :
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory, config).build()
     }
 
-    fun getPagedList():LiveData<PagedList<ProfilerItemData>>? {
+    fun getPagedList():LiveData<PagedList<ListItemData>>? {
         return itemPagedList
     }
 
-    fun getUserApiResponse(): MutableLiveData<ApiResponse<ProfilerResponse>> {
+    fun getUserApiResponse(): MutableLiveData<ApiResponse<ResponseModel>> {
         return mApiResponse
     }
 

@@ -11,6 +11,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
+import com.sushant.sampledemomvvmapicall.model.ListItemData
 import com.sushant.sampledemomvvmapicall.views.details.viewmodel.DetailsViewModel
 import java.io.File
 
@@ -66,4 +67,31 @@ object Binder {
         }
     }
 
+    @BindingAdapter("bind:loadTitle")
+    @JvmStatic
+    public fun bindTitle(view: TextView, customers: ListItemData?) {
+        customers?.let {
+            var result: String = ""
+            val customer = customers.customer
+            val firstName = customer?.firstName
+            val lastName = customer?.lastName
+            result = firstName?.plus(" ").plus(lastName)
+            view.text = result
+        }
+    }
+
+    @BindingAdapter("bind:loadAddress")
+    @JvmStatic
+    public fun bindAddress(view: TextView, customers: ListItemData?) {
+        customers?.let {
+            var result: String = ""
+            val customer = customers.customer
+            val address = customer?.address
+            val city = customer?.city
+            val state = customer?.state
+            val zip = customer?.zip
+            result = address?.plus(", ").plus(city).plus(", ").plus(state).plus(" ").plus(zip)
+            view.text = result
+        }
+    }
 }

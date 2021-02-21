@@ -2,7 +2,7 @@ package com.sushant.sampledemomvvmapicall.views.details.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
+import com.sushant.sampledemomvvmapicall.model.ListItemData
 import com.sushant.sampledemomvvmapicall.repositorys.userrepo.IUserRepository
 import com.sushant.sampledemomvvmapicall.repositorys.userrepo.UserRepository
 import com.sushant.sampledemomvvmapicall.views.base.BaseViewModel
@@ -13,8 +13,8 @@ class DetailsViewModel(application: Application) : BaseViewModel(application) {
     var mIUserRepository: IUserRepository = UserRepository()
     var mSaveUserCallBack = MutableLiveData<Throwable>()
 
-    fun saveUser(data: ProfilerItemData?) {
-        mIUserRepository.saveUser(data)
+    fun saveItem(data: ListItemData?) {
+        mIUserRepository.saveItem(data)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : DisposableSingleObserver<Boolean>() {
                 override fun onSuccess(t: Boolean) {
@@ -27,10 +27,10 @@ class DetailsViewModel(application: Application) : BaseViewModel(application) {
             })
     }
 
-    fun getSaveUserCallBack(): MutableLiveData<Throwable> {
-        return mSaveUserCallBack;
+    fun getSaveCallBack(): MutableLiveData<Throwable> {
+        return mSaveUserCallBack
     }
 
-    fun shouldEnable(item: Int?) =(item==null)
-    fun shouldAddButtonVisible(item: Int?) =(item==null)
+    fun shouldEnable(item: Int?) =(item!=null)
+    fun shouldAddButtonVisible(item: Int?) =(item!=null)
 }

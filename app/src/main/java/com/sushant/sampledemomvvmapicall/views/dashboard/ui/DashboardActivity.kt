@@ -3,7 +3,6 @@ package com.sushant.sampledemomvvmapicall.views.dashboard.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,12 +11,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.databinding.ActivityDashboardBinding
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
-import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
+import com.sushant.sampledemomvvmapicall.model.ListItemData
+import com.sushant.sampledemomvvmapicall.model.ResponseModel
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
 import com.sushant.sampledemomvvmapicall.service.model.Status
 import com.sushant.sampledemomvvmapicall.views.adapter.BaseViewHolder
@@ -28,7 +26,7 @@ import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel
 import com.sushant.sampledemomvvmapicall.views.details.ui.DetailsActivity
 
-class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<ProfilerItemData> {
+class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<ListItemData> {
 
     /**
      * This flag turn on pagination initially it is off because we save data in db after every api call
@@ -38,7 +36,8 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
      * I call it repeatedly by by increasing page no So same data will show again and again
      */
     var isPaginationOn = false
-
+    var selectedPos: Int = 0
+    var selectedData: ListItemData? =null
     private lateinit var dashboardViewModel: DashboardViewModel
     lateinit var binding: ActivityDashboardBinding
     private val adapter by lazy {
@@ -58,7 +57,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     private fun requestUserData() {
         dashboardViewModel.getLoadCallback().observe(this, Observer {
             val refresh = it is LoadInitial
-            dashboardViewModel.getUsers(refresh,isPaginationOn,it.pageValue,it)
+            dashboardViewModel.getList(refresh,isPaginationOn,it.pageValue,it)
         })
         dashboardViewModel.getUserApiResponse().observe(this, Observer {
             consumeResponse(it)
@@ -72,8 +71,8 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     /*
      * method to handle response
      * */
-    private fun consumeResponse(apiResponse: ApiResponse<ProfilerResponse>?) {
-        when (apiResponse?.status) {
+    private fun consumeResponse(apiResponseModel: ApiResponse<ResponseModel>?) {
+        when (apiResponseModel?.status) {
             Status.LOADING -> dashboardViewModel.onShowLoading()
             Status.CLEAR_LIST_HIDE_ERROR -> {
                 showErrorView(false)
@@ -86,7 +85,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
             Status.ERROR -> {
                 dashboardViewModel.onStopLoading()
                 showErrorView(true)
-                Utils.showToast(this, apiResponse.error?.message)
+                Utils.showToast(this, apiResponseModel.error?.message)
             }
             else ->{
                 showErrorView(false)
@@ -112,40 +111,29 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     }
 
 
-    override fun onItemClick(pos: Int, data: ProfilerItemData?) {
+    override fun onItemClick(pos: Int, data: ListItemData?) {
+        selectedPos = pos
+        selectedData = data
         openDetailActivity(data)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.home_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        when (item.itemId) {
-            R.id.add -> {
-                openDetailActivity(null)
-            }
-        }
-        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Utils.KEY_REQUEST_ID && resultCode == Activity.RESULT_OK) {
-            requestUserData()
+            selectedData?.let {
+                it.isActive =true
+                adapter.notifyItemChanged(selectedPos)
+            }
         }
     }
 
-    private fun openDetailActivity(item: ProfilerItemData?) {
+    private fun openDetailActivity(item: ListItemData?) {
         val intent = Intent(this, DetailsActivity::class.java)
         intent.putExtra(Utils.KEY_ITEM, item)
         startActivityForResult(intent, Utils.KEY_REQUEST_ID)
     }
 
-    override fun getHolder(parent: ViewGroup): BaseViewHolder<ProfilerItemData> {
+    override fun getHolder(parent: ViewGroup): BaseViewHolder<ListItemData> {
         return NewsViewHolder.getInstance(parent)
     }
 }

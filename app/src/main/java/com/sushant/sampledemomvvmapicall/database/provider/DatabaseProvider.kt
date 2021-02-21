@@ -4,15 +4,15 @@ import android.os.Looper
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.application.App
 import com.sushant.sampledemomvvmapicall.database.helper.*
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
-import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
+import com.sushant.sampledemomvvmapicall.model.ListItemData
+import com.sushant.sampledemomvvmapicall.model.ResponseModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
 
 object DatabaseProvider : IDatabaseProvider {
 
-    override fun saveUser(model: ProfilerItemData?): Single<Boolean> {
+    override fun saveItem(model: ListItemData?): Single<Boolean> {
         if (model == null) return Single.create<Boolean> { it.onError(Throwable()) }
         return Single.just(model)
             .observeOn(AndroidSchedulers.from(Looper.getMainLooper()))
@@ -31,19 +31,19 @@ object DatabaseProvider : IDatabaseProvider {
             }
     }
 
-    override fun getUsersFromDatabase(): Single<DatabaseResult<ProfilerResponse>> {
+    override fun getItemsFromDatabase(): Single<DatabaseResult<ResponseModel>> {
         return Single.just(true)
             .observeOn(AndroidSchedulers.from(Looper.getMainLooper()))
             .flatMap {
                 val realm = Realm.getDefaultInstance()
-                val result = realm.where(ProfilerItemData::class.java).findAllAsync()
-                Single.create<DatabaseResult<ProfilerResponse>> { emitter ->
+                val result = realm.where(ListItemData::class.java).findAllAsync()
+                Single.create<DatabaseResult<ResponseModel>> { emitter ->
                     result.addChangeListener { results ->
                         if (results.isNullOrEmpty().not()) {
-                            val resultArray: ArrayList<ProfilerItemData> = ArrayList()
+                            val resultArray: ArrayList<ListItemData> = ArrayList()
                             resultArray.addAll(realm.copyFromRealm(results))
-                            val mProfilerResponse = ProfilerResponse()
-                            mProfilerResponse.data = resultArray.toList()
+                            val mProfilerResponse = ResponseModel()
+                            mProfilerResponse.customers = resultArray.toList()
                             emitter.onSuccess(DatabaseSuccess(mProfilerResponse))
                         } else {
                             emitter.onSuccess(

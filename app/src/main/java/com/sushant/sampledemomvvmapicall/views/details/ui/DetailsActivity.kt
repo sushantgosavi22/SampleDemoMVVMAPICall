@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.karumi.dexter.Dexter
@@ -16,7 +15,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.databinding.ActivityDetailsBinding
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
+import com.sushant.sampledemomvvmapicall.model.ListItemData
 import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.details.viewmodel.DetailsViewModel
 import java.io.File
@@ -24,10 +23,10 @@ import java.io.File
 class DetailsActivity : BaseActivity(), IOnDoneClickListener, PermissionListener {
     private lateinit var mDetailsViewModel: DetailsViewModel
     lateinit var binding: ActivityDetailsBinding
-    val data: ProfilerItemData?
+    val data: ListItemData?
         get() {
             return intent?.getSerializableExtra(Utils.KEY_ITEM)
-                ?.let { return it as ProfilerItemData } ?: ProfilerItemData()
+                ?.let { return it as ListItemData } ?: ListItemData()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,21 +39,31 @@ class DetailsActivity : BaseActivity(), IOnDoneClickListener, PermissionListener
     }
 
     override fun onDoneClick() {
-        if (validate()) {
-            showProgressBar()
-            mDetailsViewModel.getSaveUserCallBack().observe(this, Observer {
-                hideProgressBar()
-                if (it != null) {
-                    Utils.showToast(this, it.message ?: getString(R.string.unexpected_error))
-                } else {
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
-            })
-            mDetailsViewModel.saveUser(binding.item)
-        }
+        setResult(Activity.RESULT_OK)
+        finish()
+        /**
+         * This is if want to save user in local database
+         * in the case that active application
+         */
+       /* showProgressBar()
+        mDetailsViewModel.getSaveCallBack().observe(this, Observer {
+            hideProgressBar()
+            if (it != null) {
+                Utils.showToast(this, it.message ?: getString(R.string.unexpected_error))
+            } else {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
+        })
+        mDetailsViewModel.saveItem(binding.item)*/
     }
 
+
+
+
+    /**
+     * This method used for asking user permission.
+     */
     override fun onImageClick() {
         Dexter.withActivity(this)
             .withPermission(Manifest.permission.CAMERA)
@@ -63,17 +72,9 @@ class DetailsActivity : BaseActivity(), IOnDoneClickListener, PermissionListener
     }
 
 
-    private fun validate(): Boolean {
-        val data = binding.item
-        val result = data?.let {
-            ((it.first_name?.isNotEmpty() == true) && it.last_name?.isNotEmpty() == true && it.email?.isNotEmpty() == true)
-        } ?: false
-        if (result.not()) {
-            Utils.showToast(this, getString(R.string.validation_failed))
-        }
-        return result
-    }
-
+    /**
+     * On permission callback.
+     */
     override fun onPermissionGranted(response: PermissionGrantedResponse?) {
         ImagePicker.with(this)
             .compress(1024)
@@ -84,7 +85,7 @@ class DetailsActivity : BaseActivity(), IOnDoneClickListener, PermissionListener
                     binding.image.setImageURI(fileUri)
                     val file: File? = ImagePicker.getFile(data)
                     val filePath: String? = file?.let { ImagePicker.getFilePath(data) }
-                    binding.item?.avatar = filePath
+                    binding.item?.imageUrl = filePath
                 } else if (resultCode == ImagePicker.RESULT_ERROR) {
                     Utils.showToast(this, ImagePicker.getError(data))
                 }

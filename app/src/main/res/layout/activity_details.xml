@@ -8,7 +8,7 @@
 
         <variable
             name="item"
-            type="com.sushant.sampledemomvvmapicall.model.ProfilerItemData" />
+            type="com.sushant.sampledemomvvmapicall.model.ListItemData" />
 
         <variable
             name="viewModel"
@@ -66,7 +66,7 @@
                                 app:cornerSizeBottomRight="0dp"
                                 app:srcCompat="@drawable/flower"
                                 android:onClick="@{() ->listener.onImageClick()}"
-                                bind:loadUrl="@{item.avatar}" />
+                                bind:loadUrl="@{item.imageUrl}" />
 
 
                             <androidx.appcompat.widget.AppCompatImageView
@@ -100,7 +100,7 @@
                                     android:maxLines="1"
                                     bind:itemId="@{item.id}"
                                     bind:viewModel="@{viewModel}"
-                                    android:text="@={item.first_name}"
+                                    android:text="@{item.customer.firstName}"
                                     android:textColorHint="@color/black" />
                             </com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout>
 
@@ -114,7 +114,7 @@
                                     android:layout_height="wrap_content"
                                     android:inputType="textPersonName"
                                     android:textColor="@color/black"
-                                    android:text="@={item.last_name}"
+                                    android:text="@{item.customer.lastName}"
                                     bind:itemId="@{item.id}"
                                     bind:viewModel="@{viewModel}"
                                     android:maxLines="1"
@@ -123,18 +123,20 @@
 
                             <com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout
                                 style="@style/Outlined.Theme"
-                                android:hint="@string/email">
+                                android:hint="@string/address">
 
                                 <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/edtEmail"
+                                    android:id="@+id/edtAddress"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:inputType="textEmailAddress"
                                     android:textColor="@color/black"
+                                    android:minLines="4"
+                                    android:lines="4"
+                                    android:maxLines="4"
                                     bind:itemId="@{item.id}"
                                     bind:viewModel="@{viewModel}"
-                                    android:text="@={item.email}"
-                                    android:maxLines="1"
+                                    bind:loadAddress="@{item}"
                                     android:textColorHint="@color/black" />
 
                             </com.sushant.sampledemomvvmapicall.views.base.CustomTextInputLayout>
@@ -154,10 +156,8 @@
             android:layout_margin="@dimen/dp_20"
             android:clickable="true"
             android:focusable="true"
-            bind:buttonVisibility="@{item.id}"
-            bind:viewModel="@{viewModel}"
             android:onClick="@{() ->listener.onDoneClick()}"
-            android:text="@string/add"
+            android:text="@string/finish_order"
             tools:ignore="UnusedAttribute" />
     </RelativeLayout>
 
