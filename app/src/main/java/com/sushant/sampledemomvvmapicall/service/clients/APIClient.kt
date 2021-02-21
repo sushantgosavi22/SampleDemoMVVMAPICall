@@ -26,6 +26,7 @@ object APIClient {
                 .build()
     }
 
+
     private fun loggerInterceptor(): HttpLoggingInterceptor {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
