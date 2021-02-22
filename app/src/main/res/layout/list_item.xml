@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.sushant.sampledemomvvmapicall.model.ProfilerItemData" />
+            type="com.sushant.sampledemomvvmapicall.model.FeedItem" />
 
     </data>
 
@@ -33,7 +33,7 @@
                 android:scaleType="fitXY"
                 app:shapeAppearanceOverlay="@style/roundedImageView"
                 app:srcCompat="@drawable/flower"
-                bind:loadUrl="@{item.avatar}" />
+                bind:loadUrl="@{item.imageHref}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,17 +47,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black"
+                    android:text="@{item.title??@string/not_applicable}"
                     android:textSize="@dimen/sp_20"
-                    android:textStyle="bold"
-                    bind:firstName="@{item.first_name}"
-                    bind:lastName="@{item.last_name}" />
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvSubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_5"
-                    android:text="@{item.email}"
+                    android:text="@{item.description??@string/not_applicable}"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/sp_16"
                     android:textStyle="italic" />

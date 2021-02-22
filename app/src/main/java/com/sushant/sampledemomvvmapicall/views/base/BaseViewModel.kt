@@ -3,8 +3,11 @@ package com.sushant.sampledemomvvmapicall.views.base
 import android.app.Application
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sushant.sampledemomvvmapicall.constant.Utils
+import com.sushant.sampledemomvvmapicall.model.FeedResponse
+import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
 
 
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {

@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.databinding.ActivityDashboardBinding
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
-import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
+import com.sushant.sampledemomvvmapicall.model.FeedItem
+import com.sushant.sampledemomvvmapicall.model.FeedResponse
+import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.FeedRepository
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
 import com.sushant.sampledemomvvmapicall.service.model.Status
 import com.sushant.sampledemomvvmapicall.views.adapter.BaseViewHolder
 import com.sushant.sampledemomvvmapicall.views.adapter.ItemAdapter
-import com.sushant.sampledemomvvmapicall.views.adapter.NewsViewHolder
+import com.sushant.sampledemomvvmapicall.views.adapter.FeedNewsViewHolder
 import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel
 
-class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<ProfilerItemData> {
-
+class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedItem> {
 
     private lateinit var dashboardViewModel: DashboardViewModel
     lateinit var binding: ActivityDashboardBinding
@@ -33,13 +33,15 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         binding.lifecycleOwner = this
-        dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
+        dashboardViewModel = ViewModelProviders.of(this,
+            DashboardViewModel.DashboardViewModelFactory(FeedRepository(),application))
+            .get(DashboardViewModel::class.java)
         binding.viewModel = dashboardViewModel
         initAdapter()
-        requestUserData()
+        requestFeed()
     }
 
-    private fun requestUserData() {
+    private fun requestFeed() {
         dashboardViewModel.getUserApiResponse().observe(this, Observer {
             consumeResponse(it)
         })
@@ -49,7 +51,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     /*
      * method to handle response
      * */
-    private fun consumeResponse(apiResponse: ApiResponse<ProfilerResponse>?) {
+    private fun consumeResponse(apiResponse: ApiResponse<FeedResponse>?) {
         when (apiResponse?.status) {
             Status.LOADING -> dashboardViewModel.onShowLoading()
             Status.CLEAR_LIST_HIDE_ERROR -> {
@@ -59,6 +61,8 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
             Status.SUCCESS -> {
                 showErrorView(false)
                 dashboardViewModel.onStopLoading()
+                val feedResponse =apiResponse.response as FeedResponse
+                handleSuccessResponse(feedResponse)
             }
             Status.ERROR -> {
                 dashboardViewModel.onStopLoading()
@@ -67,9 +71,14 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
             }
             else ->{
                 showErrorView(false)
-                hideProgressBar()
+                dashboardViewModel.onStopLoading()
             }
         }
+    }
+
+    private fun handleSuccessResponse(feedResponse : FeedResponse?){
+        title = feedResponse?.title
+        feedResponse?.rows?.let { adapter.setList(it) }
     }
 
     private fun showErrorView(error:Boolean){
@@ -81,15 +90,17 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.setHasFixedSize(true)
         binding.swipeRefreshLayout.setOnRefreshListener{
             dashboardViewModel.onRefresh()
-            requestUserData()
+            requestFeed()
         }
     }
 
-    override fun onItemClick(pos: Int, data: ProfilerItemData?) {}
-    override fun getHolder(parent: ViewGroup): BaseViewHolder<ProfilerItemData> {
-        return NewsViewHolder.getInstance(parent)
+    override fun onItemClick(pos: Int, data: FeedItem?) {}
+    override fun getHolder(parent: ViewGroup): BaseViewHolder<FeedItem> {
+        return FeedNewsViewHolder.getInstance(parent)
     }
+
+
+
 }

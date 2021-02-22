@@ -3,18 +3,18 @@ package com.sushant.sampledemomvvmapicall.views.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.sushant.sampledemomvvmapicall.databinding.ListItemBinding
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
+import com.sushant.sampledemomvvmapicall.model.FeedItem
 
-class NewsViewHolder(var mListItemBinding : ListItemBinding) : BaseViewHolder<ProfilerItemData>(mListItemBinding){
-    override fun bind(model: ProfilerItemData, position: Int, listenerI: ItemAdapter.IAdapterItemListener<ProfilerItemData>?) {
+class FeedNewsViewHolder(var mListItemBinding : ListItemBinding) : BaseViewHolder<FeedItem>(mListItemBinding){
+    override fun bind(model: FeedItem, position: Int, listenerI: ItemAdapter.IAdapterItemListener<FeedItem>?) {
         super.bind(model, position, listenerI)
         mListItemBinding.item = model
     }
 
     companion object{
-        fun getInstance(parent: ViewGroup) : NewsViewHolder{
+        fun getInstance(parent: ViewGroup) : FeedNewsViewHolder{
             val binding =ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return NewsViewHolder(binding)
+            return FeedNewsViewHolder(binding)
         }
     }
 }

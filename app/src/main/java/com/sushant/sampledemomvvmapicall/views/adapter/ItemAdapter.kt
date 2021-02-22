@@ -12,9 +12,9 @@ class ItemAdapter<T, out H : BaseViewHolder<T>>(val list : ArrayList<T>, private
         list[position]?.let { (holder as H).bind(it, position, listener) }
     }
 
-    fun setList(list : ArrayList<T>){
+    fun setList(mList : ArrayList<T>){
         list.clear()
-        list.addAll(list)
+        list.addAll(mList)
         notifyDataSetChanged()
     }
 

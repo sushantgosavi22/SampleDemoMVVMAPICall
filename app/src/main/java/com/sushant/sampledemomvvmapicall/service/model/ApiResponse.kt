@@ -31,7 +31,5 @@ public class ApiResponse<T>  {
         fun <T>  emptyList(): ApiResponse<T>? {
             return ApiResponse(Status.SHOW_EMPTY_LIST, null, null)
         }
-
-
     }
 }

@@ -1,5 +1,7 @@
 package com.sushant.sampledemomvvmapicall.service.model
 
-open class BaseResponse<T> {
+import java.io.Serializable
+
+open class BaseResponse<T> : Serializable {
 
 }

@@ -25,12 +25,18 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Show progress bar.
+     */
     fun showProgressBar(){
         if (dialog == null)
             dialog = AlertDialog.Builder(this).setCancelable(false).setView(R.layout.progress_dailog_layout).create()
         dialog?.show()
     }
 
+    /**
+     * Hide progress bar.
+     */
     fun hideProgressBar(){
         if (dialog != null && dialog?.isShowing==true)
             dialog?.hide()

@@ -1,9 +1,12 @@
 package com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.sushant.sampledemomvvmapicall.constant.Utils
-import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
+import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.IFeedRepository
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.FeedRepository
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
@@ -11,19 +14,17 @@ import com.sushant.sampledemomvvmapicall.views.base.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 
-class DashboardViewModel(application: Application) : BaseViewModel(application) {
-    var mIFeedRepository: IFeedRepository = FeedRepository()
-    var mApiResponse = MutableLiveData<ApiResponse<ProfilerResponse>>()
-
+class DashboardViewModel(private val mIFeedRepository : IFeedRepository, application: Application) : BaseViewModel(application) {
+    var mApiResponse = MutableLiveData<ApiResponse<FeedResponse>>()
+    val mApiResponseTest: LiveData<ApiResponse<FeedResponse>> =mApiResponse
     fun getUsers(page : Int = Utils.FIRST_PAGE) {
         mIFeedRepository.getFeeds(page)
-            .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { disposable ->
                 onShowLoading()
                 mApiResponse.value = ApiResponse.loading()
             }
-            .subscribe(object : DisposableSingleObserver<ProfilerResponse>() {
-                override fun onSuccess(t: ProfilerResponse) {
+            .subscribe(object : DisposableSingleObserver<FeedResponse>() {
+                override fun onSuccess(t: FeedResponse) {
                     if (page == Utils.FIRST_PAGE) {
                         mApiResponse.value = ApiResponse.clearListAndHideError()
                     }
@@ -46,7 +47,7 @@ class DashboardViewModel(application: Application) : BaseViewModel(application) 
         getUsers()
     }
 
-    fun getUserApiResponse(): MutableLiveData<ApiResponse<ProfilerResponse>> {
+    fun getUserApiResponse(): MutableLiveData<ApiResponse<FeedResponse>> {
         return mApiResponse
     }
 
@@ -54,4 +55,10 @@ class DashboardViewModel(application: Application) : BaseViewModel(application) 
         super.onCleared()
     }
 
+    class DashboardViewModelFactory(private var repo: IFeedRepository,private var app: Application) :
+        ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return modelClass.getConstructor(IFeedRepository::class.java, Application::class.java).newInstance(repo, app)
+        }
+    }
 }
