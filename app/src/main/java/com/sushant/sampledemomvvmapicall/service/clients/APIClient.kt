@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object APIClient {
 
-    private const val baseURL: String = "https://reqres.in/api/"
+    private const val baseURL: String = "https://dl.dropboxusercontent.com/"
     val client: Retrofit by lazy {
         Retrofit.Builder()
                 .baseUrl(baseURL)

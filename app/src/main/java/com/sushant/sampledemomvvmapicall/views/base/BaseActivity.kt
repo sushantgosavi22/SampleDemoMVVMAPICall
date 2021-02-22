@@ -21,9 +21,8 @@ open class BaseActivity : AppCompatActivity() {
             this.setDisplayHomeAsUpEnabled(true)
             this.setDisplayShowHomeEnabled(true)
             this.setDisplayHomeAsUpEnabled(true)
-            this.setIcon(ContextCompat.getDrawable( this@BaseActivity,R.drawable.app_icon_profiler))
+            this.setIcon(ContextCompat.getDrawable( this@BaseActivity,R.drawable.app_icon_news))
         }
-
     }
 
     fun showProgressBar(){

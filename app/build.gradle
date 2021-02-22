@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 30
@@ -15,9 +14,10 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-        archivesBaseName = "SimpleDemoMVVMAPICall-${versionCode}-${versionName}-${new Date().format('yyMMdd')}"
+        archivesBaseName = "WiproCodeingAssignment-${versionCode}-${versionName}-${new Date().format('yyMMdd')}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     dataBinding {
         enabled = true
     }
@@ -46,7 +46,6 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerView"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation "android.arch.lifecycle:livedata:1.1.1"
-    implementation 'android.arch.paging:runtime:1.0.0'
     kapt "com.android.databinding:compiler:3.1.4"
 
     /*RxJava lib*/
@@ -66,10 +65,6 @@ dependencies {
     //images
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-    implementation 'com.github.dhaval2404:imagepicker-support:1.7.1'
-    implementation 'com.github.florent37:inline-activity-result-kotlin:1.0.4'
-    implementation 'com.karumi:dexter:5.0.0'
-
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

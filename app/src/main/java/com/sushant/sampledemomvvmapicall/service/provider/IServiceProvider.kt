@@ -5,5 +5,5 @@ import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
 import io.reactivex.Single
 
 interface IServiceProvider {
-    fun getUsers(context: Context, page: Int): Single<ProfilerResponse>
+    fun getFeeds(page: Int): Single<ProfilerResponse>
 }

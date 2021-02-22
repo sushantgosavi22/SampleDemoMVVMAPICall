@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface ApiInterface {
 
-    @GET("users")
-    fun getUsers(@Query("page") page: Int?): Single<ProfilerResponse>
+    @GET("s/2iodh4vg0eortkl/facts.json")
+    fun getFeeds(@Query("page") page: Int?): Single<ProfilerResponse>
 
 }
