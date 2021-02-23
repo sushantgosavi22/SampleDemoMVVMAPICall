@@ -10,9 +10,9 @@ import com.sushant.sampledemomvvmapicall.views.base.BaseViewModel
 import io.reactivex.observers.DisposableSingleObserver
 
 class DashboardViewModel(application: Application,private val mIFeedRepository : IFeedRepository, private val savedStateHandle: SavedStateHandle) : BaseViewModel(application) {
-    var mApiResponse : MutableLiveData<ApiResponse<FeedResponse>> = getPersistedFeedResponse()//savedStateHandle.getLiveData(Utils.RESPONSE)
+    var mApiResponse : MutableLiveData<ApiResponse<FeedResponse>> = getPersistedFeedResponse()
     val mApiResponseTest: LiveData<ApiResponse<FeedResponse>> =mApiResponse
-    fun getUsers(page : Int = Utils.FIRST_PAGE) {
+    fun getFeeds(page : Int = Utils.FIRST_PAGE) {
         mIFeedRepository.getFeeds(page)
             .doOnSubscribe { disposable ->
                 onShowLoading()
@@ -39,7 +39,7 @@ class DashboardViewModel(application: Application,private val mIFeedRepository :
     fun onRefresh() {
         resetPageCount()
         onShowLoading()
-        getUsers()
+        getFeeds()
     }
 
     fun getUserApiResponse(): MutableLiveData<ApiResponse<FeedResponse>> {

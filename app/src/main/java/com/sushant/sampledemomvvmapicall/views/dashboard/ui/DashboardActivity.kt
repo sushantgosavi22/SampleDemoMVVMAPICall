@@ -53,7 +53,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
          * Then restore the persisted data [remove extra api/database call ]
          */
         if(dashboardViewModel.isPersistedAvailable().value==false){
-            dashboardViewModel.getUsers()
+            dashboardViewModel.getFeeds()
             dashboardViewModel.setPersisted(true)
         }
     }

@@ -50,7 +50,7 @@ class DashboardViewModelTest : TestCase() {
     fun testGetFeedSuccessScenario(){
         viewModel.mApiResponseTest.observeForever(apiResponseObserver)
         Mockito.`when`(repository.getFeeds(page)).thenReturn(Single.just(feedResponse))
-        viewModel.getUsers(page)
+        viewModel.getFeeds(page)
 
         Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
         val response = viewModel.mApiResponseTest.value?.response as FeedResponse
@@ -62,7 +62,7 @@ class DashboardViewModelTest : TestCase() {
     fun testGetFeedFailedScenario(){
         viewModel.mApiResponseTest.observeForever(apiResponseObserver)
         Mockito.doThrow(Throwable()).`when`(repository).getFeeds(page)
-        viewModel.getUsers(page)
+        viewModel.getFeeds(page)
         Assert.assertNull(viewModel.mApiResponseTest.value?.response)
     }
 
