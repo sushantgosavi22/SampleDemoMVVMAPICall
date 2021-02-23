@@ -6,6 +6,6 @@ import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import io.reactivex.Single
 
 interface IFeedRepository {
-    fun getFeeds(context: Context, page: Int) : Single<FeedResponse>
+    fun getFeeds(context: Context, page: Int,isPaginationOn: Boolean = false) : Single<FeedResponse>
     fun saveFeed(data : FeedItem?) : Single<Boolean>
 }

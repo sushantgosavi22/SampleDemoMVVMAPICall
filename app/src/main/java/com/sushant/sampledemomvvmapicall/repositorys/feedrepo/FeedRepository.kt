@@ -17,7 +17,7 @@ class FeedRepository : IFeedRepository {
     var mIServiceProvider: IServiceProvider = ServiceProvider
 
 
-    override fun getFeeds(context: Context, page: Int): Single<FeedResponse> {
+    override fun getFeeds(context: Context, page: Int,isPaginationOn: Boolean): Single<FeedResponse> {
         return mIDatabaseProvider.getFeedsFromDatabase()
             .flatMap {
                 /**

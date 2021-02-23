@@ -18,7 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 
 class DashboardViewModel(application: Application) : BaseListViewModel<FeedItem>(application) {
-    var isPaginationOn : Boolean = false
+    var isPaginationOn : Boolean = true
     var mIFeedRepository: IFeedRepository = FeedRepository()
     var mApiResponse = MutableLiveData<ApiResponse<FeedResponse>>()
     private val itemDataSourceFactory by lazy {
@@ -91,7 +91,8 @@ class DashboardViewModel(application: Application) : BaseListViewModel<FeedItem>
 
     override fun onRefresh() {
         onShowLoading()
-
+        resetPaging()
+        callPaginatedApi(isPaginationOn)
     }
 
     private val loadObserver = Observer<PageLoadingCallBack> {
