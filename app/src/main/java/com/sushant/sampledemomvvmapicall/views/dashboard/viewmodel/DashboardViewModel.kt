@@ -73,7 +73,7 @@ class DashboardViewModel(application: Application) : BaseListViewModel<FeedItem>
                     when (it) {
                         is LoadInitial -> {
                             if (pageToRequest == Utils.FIRST_PAGE ) {
-                                it.callback.onResult(list, null, callBack.pageValue)
+                                it.callback.onResult(list, null, callBack.pageValue+1)
                             }else{
                                 it.callback.onResult(list, null, callBack.pageValue + 1)
                             }

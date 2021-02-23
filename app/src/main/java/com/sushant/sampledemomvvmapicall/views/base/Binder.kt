@@ -52,18 +52,5 @@ object Binder {
         view.isFocusable = enable
     }
 
-    @BindingAdapter("bind:loadActive")
-    @JvmStatic
-    public fun bindBookmarkImage(view: ImageView, bookmarked: Boolean?) {
-        bookmarked?.let {
-            view.setBackgroundResource(
-                if (it) {
-                    R.drawable.red_dot
-                } else {
-                    R.drawable.green_dot
-                }
-            )
-        }
-    }
 
 }
