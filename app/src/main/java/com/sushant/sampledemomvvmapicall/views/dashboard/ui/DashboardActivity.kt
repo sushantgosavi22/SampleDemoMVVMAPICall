@@ -3,7 +3,6 @@ package com.sushant.sampledemomvvmapicall.views.dashboard.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,12 +11,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.databinding.ActivityDashboardBinding
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
-import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
+import com.sushant.sampledemomvvmapicall.model.FeedItem
+import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
 import com.sushant.sampledemomvvmapicall.service.model.Status
 import com.sushant.sampledemomvvmapicall.views.adapter.BaseViewHolder
@@ -28,7 +26,7 @@ import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel
 import com.sushant.sampledemomvvmapicall.views.details.ui.DetailsActivity
 
-class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<ProfilerItemData> {
+class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedItem> {
 
     /**
      * This flag turn on pagination initially it is off because we save data in db after every api call
@@ -37,7 +35,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
      * This API doesn't support pagination as it has no max page count, page number support so
      * I call it repeatedly by by increasing page no So same data will show again and again
      */
-    var isPaginationOn = false
+    var isPaginationOn = true
 
     private lateinit var dashboardViewModel: DashboardViewModel
     lateinit var binding: ActivityDashboardBinding
@@ -56,14 +54,10 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     }
 
     private fun requestUserData() {
-        dashboardViewModel.getLoadCallback().observe(this, Observer {
-            val refresh = it is LoadInitial
-            dashboardViewModel.getUsers(refresh,isPaginationOn,it.pageValue,it)
-        })
         dashboardViewModel.getUserApiResponse().observe(this, Observer {
             consumeResponse(it)
         })
-        dashboardViewModel.callPaginatedApi()
+        dashboardViewModel.callPaginatedApi(isPaginationOn)
         dashboardViewModel.getPagedList()?.observe(this, Observer {
             adapter.submitList(it)
         })
@@ -72,7 +66,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     /*
      * method to handle response
      * */
-    private fun consumeResponse(apiResponse: ApiResponse<ProfilerResponse>?) {
+    private fun consumeResponse(apiResponse: ApiResponse<FeedResponse>?) {
         when (apiResponse?.status) {
             Status.LOADING -> dashboardViewModel.onShowLoading()
             Status.CLEAR_LIST_HIDE_ERROR -> {
@@ -112,7 +106,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
     }
 
 
-    override fun onItemClick(pos: Int, data: ProfilerItemData?) {
+    override fun onItemClick(pos: Int, data: FeedItem?) {
         openDetailActivity(data)
     }
 
@@ -139,13 +133,13 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<Profi
         }
     }
 
-    private fun openDetailActivity(item: ProfilerItemData?) {
+    private fun openDetailActivity(item: FeedItem?) {
         val intent = Intent(this, DetailsActivity::class.java)
         intent.putExtra(Utils.KEY_ITEM, item)
         startActivityForResult(intent, Utils.KEY_REQUEST_ID)
     }
 
-    override fun getHolder(parent: ViewGroup): BaseViewHolder<ProfilerItemData> {
+    override fun getHolder(parent: ViewGroup): BaseViewHolder<FeedItem> {
         return NewsViewHolder.getInstance(parent)
     }
 }

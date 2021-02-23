@@ -1,26 +1,24 @@
-package com.sushant.sampledemomvvmapicall.repositorys.userrepo
+package com.sushant.sampledemomvvmapicall.repositorys.feedrepo
 
 import android.content.Context
-import android.util.Log
 import com.sushant.sampledemomvvmapicall.database.helper.DatabaseFailure
 import com.sushant.sampledemomvvmapicall.database.helper.DatabaseSuccess
 import com.sushant.sampledemomvvmapicall.database.provider.DatabaseProvider
 import com.sushant.sampledemomvvmapicall.database.provider.IDatabaseProvider
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
-import com.sushant.sampledemomvvmapicall.model.ProfilerResponse
+import com.sushant.sampledemomvvmapicall.model.FeedItem
+import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.service.provider.IServiceProvider
 import com.sushant.sampledemomvvmapicall.service.provider.ServiceProvider
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 
-class UserRepository : IUserRepository {
+class FeedRepository : IFeedRepository {
     var mIDatabaseProvider: IDatabaseProvider = DatabaseProvider
     var mIServiceProvider: IServiceProvider = ServiceProvider
 
 
-    override fun getUsers(context: Context, page: Int): Single<ProfilerResponse> {
-        return mIDatabaseProvider.getUsersFromDatabase()
+    override fun getFeeds(context: Context, page: Int): Single<FeedResponse> {
+        return mIDatabaseProvider.getFeedsFromDatabase()
             .flatMap {
                 when (it) {
                     is DatabaseFailure -> getUsersResponse(context, page)
@@ -29,10 +27,10 @@ class UserRepository : IUserRepository {
             }
     }
 
-    private fun getUsersResponse(context: Context, page: Int): Single<ProfilerResponse> {
-        return mIServiceProvider.getUsers(context, page).flatMap {
+    private fun getUsersResponse(context: Context, page: Int): Single<FeedResponse> {
+        return mIServiceProvider.getFeeds(context, page).flatMap {
             it.data?.forEach {
-                saveUser(it).subscribe(object : DisposableSingleObserver<Boolean>() {
+                saveFeed(it).subscribe(object : DisposableSingleObserver<Boolean>() {
                         override fun onSuccess(t: Boolean) {}
                         override fun onError(e: Throwable) {}
                     })
@@ -42,7 +40,7 @@ class UserRepository : IUserRepository {
     }
 
 
-    override fun saveUser(data: ProfilerItemData?): Single<Boolean> {
-        return mIDatabaseProvider.saveUser(data)
+    override fun saveFeed(data: FeedItem?): Single<Boolean> {
+        return mIDatabaseProvider.saveFeed(data)
     }
 }

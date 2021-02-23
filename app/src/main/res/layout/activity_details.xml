@@ -8,7 +8,7 @@
 
         <variable
             name="item"
-            type="com.sushant.sampledemomvvmapicall.model.ProfilerItemData" />
+            type="com.sushant.sampledemomvvmapicall.model.FeedItem" />
 
         <variable
             name="viewModel"

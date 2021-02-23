@@ -16,7 +16,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.databinding.ActivityDetailsBinding
-import com.sushant.sampledemomvvmapicall.model.ProfilerItemData
+import com.sushant.sampledemomvvmapicall.model.FeedItem
 import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.details.viewmodel.DetailsViewModel
 import java.io.File
@@ -24,10 +24,10 @@ import java.io.File
 class DetailsActivity : BaseActivity(), IOnDoneClickListener, PermissionListener {
     private lateinit var mDetailsViewModel: DetailsViewModel
     lateinit var binding: ActivityDetailsBinding
-    val data: ProfilerItemData?
+    val data: FeedItem?
         get() {
             return intent?.getSerializableExtra(Utils.KEY_ITEM)
-                ?.let { return it as ProfilerItemData } ?: ProfilerItemData()
+                ?.let { return it as FeedItem } ?: FeedItem()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,16 +42,16 @@ class DetailsActivity : BaseActivity(), IOnDoneClickListener, PermissionListener
     override fun onDoneClick() {
         if (validate()) {
             showProgressBar()
-            mDetailsViewModel.getSaveUserCallBack().observe(this, Observer {
+            mDetailsViewModel.getSaveFeedCallBack().observe(this, Observer {
                 hideProgressBar()
-                if (it != null) {
-                    Utils.showToast(this, it.message ?: getString(R.string.unexpected_error))
-                } else {
+                if(it.data==true){
                     setResult(Activity.RESULT_OK)
                     finish()
+                }else {
+                    Utils.showToast(this, it.exception?.message?: getString(R.string.unexpected_error))
                 }
             })
-            mDetailsViewModel.saveUser(binding.item)
+            mDetailsViewModel.saveFeed(binding.item)
         }
     }
 
