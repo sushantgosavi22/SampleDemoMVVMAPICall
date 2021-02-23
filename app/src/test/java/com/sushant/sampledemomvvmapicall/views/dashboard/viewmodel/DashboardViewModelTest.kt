@@ -3,6 +3,7 @@ package com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import com.sushant.sampledemomvvmapicall.model.FeedItem
 import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.FeedRepository
@@ -40,7 +41,7 @@ class DashboardViewModelTest : TestCase() {
         super.setUp()
         MockitoAnnotations.initMocks(this)
         repository = Mockito.mock(FeedRepository::class.java)
-        viewModel = DashboardViewModel(repository,context)
+        viewModel = DashboardViewModel(context,repository, SavedStateHandle())
         apiResponseObserver = Mockito.mock(Observer::class.java) as Observer<ApiResponse<FeedResponse>>
         mockRequiredData()
     }
