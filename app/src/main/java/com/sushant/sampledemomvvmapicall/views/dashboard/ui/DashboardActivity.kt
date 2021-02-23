@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sushant.sampledemomvvmapicall.R
@@ -34,7 +35,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         binding.lifecycleOwner = this
         dashboardViewModel = ViewModelProviders.of(this,
-            DashboardViewModel.DashboardViewModelFactory(FeedRepository(),application))
+            DashboardViewModel.DashboardViewModelFactory(application,FeedRepository(), SavedStateHandle()))
             .get(DashboardViewModel::class.java)
         binding.viewModel = dashboardViewModel
         initAdapter()
@@ -45,7 +46,16 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
         dashboardViewModel.getUserApiResponse().observe(this, Observer {
             consumeResponse(it)
         })
-        dashboardViewModel.getUsers()
+
+        /**
+         * Below code check if there is data available in persisted state.
+         * In the case of activity recreated eg. screen rotation, config changes
+         * Then restore the persisted data [remove extra api/database call ]
+         */
+        if(dashboardViewModel.isPersistedAvailable().value==false){
+            dashboardViewModel.getUsers()
+            dashboardViewModel.setPersisted(true)
+        }
     }
 
     /*

@@ -1,41 +1,36 @@
 package com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.IFeedRepository
-import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.FeedRepository
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
 import com.sushant.sampledemomvvmapicall.views.base.BaseViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 
-class DashboardViewModel(private val mIFeedRepository : IFeedRepository, application: Application) : BaseViewModel(application) {
-    var mApiResponse = MutableLiveData<ApiResponse<FeedResponse>>()
+class DashboardViewModel(application: Application,private val mIFeedRepository : IFeedRepository, private val savedStateHandle: SavedStateHandle) : BaseViewModel(application) {
+    var mApiResponse : MutableLiveData<ApiResponse<FeedResponse>> = getPersistedFeedResponse()//savedStateHandle.getLiveData(Utils.RESPONSE)
     val mApiResponseTest: LiveData<ApiResponse<FeedResponse>> =mApiResponse
     fun getUsers(page : Int = Utils.FIRST_PAGE) {
         mIFeedRepository.getFeeds(page)
             .doOnSubscribe { disposable ->
                 onShowLoading()
-                mApiResponse.value = ApiResponse.loading()
+                setFeedResponse(ApiResponse.loading())
             }
             .subscribe(object : DisposableSingleObserver<FeedResponse>() {
                 override fun onSuccess(t: FeedResponse) {
                     if (page == Utils.FIRST_PAGE) {
-                        mApiResponse.value = ApiResponse.clearListAndHideError()
+                        setFeedResponse(ApiResponse.clearListAndHideError())
                     }
-                    mApiResponse.value = ApiResponse.success(t)
+                    setFeedResponse(ApiResponse.success(t))
                 }
 
                 override fun onError(e: Throwable) {
                     if (page == Utils.FIRST_PAGE) {
-                        mApiResponse.value = ApiResponse.emptyList()
+                        setFeedResponse(ApiResponse.emptyList())
                     }
-                    mApiResponse.value = ApiResponse.error(e)
+                    setFeedResponse(ApiResponse.error(e))
                 }
             })
     }
@@ -55,10 +50,16 @@ class DashboardViewModel(private val mIFeedRepository : IFeedRepository, applica
         super.onCleared()
     }
 
-    class DashboardViewModelFactory(private var repo: IFeedRepository,private var app: Application) :
+
+    private fun setFeedResponse(response: ApiResponse<FeedResponse>) =savedStateHandle.set(Utils.RESPONSE, response)
+    private fun getPersistedFeedResponse() : MutableLiveData<ApiResponse<FeedResponse>> =savedStateHandle.getLiveData(Utils.RESPONSE)
+    fun isPersistedAvailable() :LiveData<Boolean> = savedStateHandle.getLiveData<Boolean>(Utils.PERSISTED,false)
+    fun setPersisted(boolean: Boolean) = savedStateHandle.set(Utils.PERSISTED,boolean)
+
+    class DashboardViewModelFactory(private var app: Application,private var repo: IFeedRepository,private var mSavedStateHandle : SavedStateHandle) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return modelClass.getConstructor(IFeedRepository::class.java, Application::class.java).newInstance(repo, app)
+            return modelClass.getConstructor(Application::class.java,IFeedRepository::class.java,SavedStateHandle::class.java).newInstance(app,repo,mSavedStateHandle)
         }
     }
 }

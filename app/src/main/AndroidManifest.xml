@@ -15,8 +15,7 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.SampleDemoMVVMAPICall">
-        <activity android:name=".views.dashboard.ui.DashboardActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".views.dashboard.ui.DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -9,6 +9,8 @@ import android.widget.Toast
 
 object Utils {
 
+    const val PERSISTED: String = "persisted"
+    const val RESPONSE: String = "response"
     const val FIRST_PAGE: Int = 1
 
     fun showToast(context: Context?, message: String?) {

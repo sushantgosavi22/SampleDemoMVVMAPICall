@@ -1,6 +1,8 @@
 package com.sushant.sampledemomvvmapicall.service.model
 
-public class ApiResponse<T>  {
+import java.io.Serializable
+
+public class ApiResponse<T> : Serializable  {
     var status: Status? = null
     var error: Throwable? = null
     var response: BaseResponse<T>? = null
@@ -12,23 +14,23 @@ public class ApiResponse<T>  {
     }
 
     companion object{
-        fun <T>  loading(): ApiResponse<T>? {
+        fun <T>  loading(): ApiResponse<T> {
             return ApiResponse(Status.LOADING, null, null)
         }
 
-        fun <T>  success(data: BaseResponse<T>?): ApiResponse<T>? {
+        fun <T>  success(data: BaseResponse<T>?): ApiResponse<T> {
             return ApiResponse(Status.SUCCESS, data, null)
         }
 
-        fun <T>  error(error: Throwable?): ApiResponse<T>? {
+        fun <T>  error(error: Throwable?): ApiResponse<T> {
             return ApiResponse(Status.ERROR, null, error)
         }
 
-        fun <T>  clearListAndHideError(): ApiResponse<T>? {
+        fun <T>  clearListAndHideError(): ApiResponse<T> {
             return ApiResponse(Status.CLEAR_LIST_HIDE_ERROR, null, null)
         }
 
-        fun <T>  emptyList(): ApiResponse<T>? {
+        fun <T>  emptyList(): ApiResponse<T> {
             return ApiResponse(Status.SHOW_EMPTY_LIST, null, null)
         }
     }
