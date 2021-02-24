@@ -15,7 +15,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-        archivesBaseName = "SimpleDemoMVVMAPICall-${versionCode}-${versionName}-${new Date().format('yyMMdd')}"
+        archivesBaseName = "App1Kosmos-${versionCode}-${versionName}-${new Date().format('yyMMdd')}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     dataBinding {
