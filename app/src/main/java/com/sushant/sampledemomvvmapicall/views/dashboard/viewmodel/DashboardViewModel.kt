@@ -18,14 +18,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 
 class DashboardViewModel(application: Application) : BaseListViewModel<FeedItem>(application) {
-    var isPaginationOn : Boolean = true
     var mIFeedRepository: IFeedRepository = FeedRepository()
     var mApiResponse = MutableLiveData<ApiResponse<FeedResponse>>()
     private val itemDataSourceFactory by lazy {
         FeedDataSourceFactory()
     }
 
-    private fun getFeeds(forcedRefresh: Boolean = false, isPaginationOn: Boolean = false, page: Int, callBack: PageLoadingCallBack? = null) {
+    private fun getFeeds(forcedRefresh: Boolean = false,page: Int, callBack: PageLoadingCallBack? = null) {
         setCurrentPageLoading(true)
         val pageToRequest = if (forcedRefresh) Utils.FIRST_PAGE else page
         mIFeedRepository.getFeeds(getApplication(), pageToRequest)
@@ -38,7 +37,7 @@ class DashboardViewModel(application: Application) : BaseListViewModel<FeedItem>
                     if (pageToRequest == Utils.FIRST_PAGE) {
                         mApiResponse.value = ApiResponse.clearListAndHideError()
                     }
-                    handleRefreshCallBack(callBack, t,pageToRequest,isPaginationOn)
+                    handleRefreshCallBack(callBack, t,pageToRequest)
                     mApiResponse.value = ApiResponse.success(t)
                     incrementPageCount()
                 }
@@ -52,23 +51,9 @@ class DashboardViewModel(application: Application) : BaseListViewModel<FeedItem>
             })
     }
 
-    fun handleRefreshCallBack(callBack: PageLoadingCallBack?, response: FeedResponse, pageToRequest : Int, isPaginationOn: Boolean) {
+    fun handleRefreshCallBack(callBack: PageLoadingCallBack?, response: FeedResponse, pageToRequest : Int) {
         try {
             callBack?.let {
-                if (isPaginationOn.not()) {
-                    when (it) {
-                        is LoadInitial -> {
-                            response.data?.let { list ->
-                                if (pageToRequest == Utils.FIRST_PAGE) {
-                                    it.callback.onResult(list, null, callBack.pageValue)
-                                } else {
-                                    it.callback.onResult(list, null, callBack.pageValue + 1)
-                                }
-                            }
-                        }
-                    }
-                    return
-                }
                 response.data?.let { list ->
                     when (it) {
                         is LoadInitial -> {
@@ -82,7 +67,6 @@ class DashboardViewModel(application: Application) : BaseListViewModel<FeedItem>
                         is LoadAfter -> it.callback.onResult(list, callBack.pageValue + 1)
                     }
                 }
-
             }
         }catch (e : Exception){
             e.printStackTrace()
@@ -92,17 +76,16 @@ class DashboardViewModel(application: Application) : BaseListViewModel<FeedItem>
     override fun onRefresh() {
         onShowLoading()
         resetPaging()
-        callPaginatedApi(isPaginationOn)
+        callPaginatedApi()
     }
 
     private val loadObserver = Observer<PageLoadingCallBack> {
         val refresh = it is LoadInitial
-        getFeeds(refresh,isPaginationOn,it.pageValue,it)
+        getFeeds(refresh,it.pageValue,it)
     }
 
     var itemPagedList : LiveData<PagedList<FeedItem>>? = null
-    fun callPaginatedApi(isPaginationOn : Boolean = false) {
-        this.isPaginationOn =isPaginationOn
+    fun callPaginatedApi() {
         val config: PagedList.Config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPageSize(Utils.PAGE_SIZE)

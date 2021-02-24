@@ -7,5 +7,5 @@ import io.reactivex.Single
 
 interface IDatabaseProvider {
     fun saveFeed(model: FeedItem?) : Single<Boolean>
-    fun getFeedsFromDatabase() : Single<DatabaseResult<FeedResponse>>
+    fun getFeedsFromDatabase( page: Int) : Single<DatabaseResult<FeedResponse>>
 }

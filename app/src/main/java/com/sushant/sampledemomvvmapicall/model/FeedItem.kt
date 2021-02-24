@@ -2,13 +2,15 @@ package com.sushant.sampledemomvvmapicall.model
 
 import androidx.recyclerview.widget.DiffUtil
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 import java.io.Serializable
 
 open class FeedItem : RealmObject(), Serializable {
+    @PrimaryKey
+    var id: Int? = null
     var avatar: String? = null
     var email: String? = null
     var first_name: String? = null
-    var id: Int? = null
     var last_name: String? = null
     var isActive: Boolean = false
 

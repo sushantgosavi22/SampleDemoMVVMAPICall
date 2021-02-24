@@ -28,15 +28,6 @@ import com.sushant.sampledemomvvmapicall.views.details.ui.DetailsActivity
 
 class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedItem> {
 
-    /**
-     * This flag turn on pagination initially it is off because we save data in db after every api call
-     * so lot of data stored in db
-     *
-     * This API doesn't support pagination as it has data upto two page
-     * means it doesn't return any data if page value is 3
-     * as well as  it has no max page count, page number support
-     */
-    private var isPaginationOn = false
     private lateinit var dashboardViewModel: DashboardViewModel
     lateinit var binding: ActivityDashboardBinding
     private val adapter by lazy {
@@ -57,7 +48,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
         dashboardViewModel.getUserApiResponse().observe(this, Observer {
             consumeResponse(it)
         })
-        dashboardViewModel.callPaginatedApi(isPaginationOn)
+        dashboardViewModel.callPaginatedApi()
         dashboardViewModel.getPagedList()?.observe(this, Observer {
             adapter.submitList(it)
         })
