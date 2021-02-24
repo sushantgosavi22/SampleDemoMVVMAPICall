@@ -91,10 +91,7 @@ class DetailsActivity : BaseActivity(), IOnDoneClickListener, PermissionListener
             }
     }
 
-    override fun onPermissionRationaleShouldBeShown(
-        permission: PermissionRequest?,
-        token: PermissionToken?
-    ) {
+    override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
         token?.continuePermissionRequest()
     }
 
