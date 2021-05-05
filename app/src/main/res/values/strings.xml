@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Wipro News Feed</string>
+    <string name="app_name">Anoma App</string>
     <string name="unexpected_error">Unexpected Behaviour contact administrator!</string>
     <string name="list_not_found">List not found!</string>
     <string name="validation_failed">Please Fill all the fields.</string>
@@ -12,6 +12,8 @@
     <string name="firstName">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
+    <string name="user">Users</string>
+    <string name="circles">Circles</string>
     <string name="user_details">User Details</string>
     <string name="loading">Loading...</string>
 

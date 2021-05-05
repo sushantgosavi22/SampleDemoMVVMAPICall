@@ -23,4 +23,5 @@ object Binder {
                 .into(view)
         }
     }
+
 }

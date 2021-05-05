@@ -5,12 +5,10 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.widget.TextView
 import android.widget.Toast
-import java.text.DateFormat
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
+import java.io.IOException
+import java.io.InputStream
+import java.nio.charset.Charset
 
 object Utils {
 
@@ -52,4 +50,19 @@ object Utils {
             }
         }
 
+    fun loadJSONFromAsset(context: Context): String? {
+        var json: String? = null
+        json = try {
+            val inputStream: InputStream = context.getAssets().open("circles.json")
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            inputStream.close()
+            String(buffer, charset("UTF-8"))
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+            return null
+        }
+        return json
+    }
 }

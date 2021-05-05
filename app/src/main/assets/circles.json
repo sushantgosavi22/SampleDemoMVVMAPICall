@@ -1,0 +1,70 @@
+{
+  "loggedInUser": {
+    "id": "77725ad5-c018-4d87-8969-37493a3b1a28",
+    "name": "Jason"
+  },
+  "circles": [
+    {
+      "id": "6635d4d7-e289-4503-99c1-42da52fc0474",
+      "name": "Circle 1",
+      "users": [
+        {
+          "id": "1574bd03-08f1-4646-aaec-0d08e11ef635",
+          "name": "Mike"
+        },
+        {
+          "id": "5cb66dcd-2a4f-4c03-a1e7-688bbca58cca",
+          "name": "Steve"
+        },
+        {
+          "id": "abcbdalsjkdjaldjasdasvbwiehe",
+          "name": "Alex"
+        },
+        {
+          "id": "77725ad5-c018-4d87-8969-37493a3b1a28",
+          "name": "Jason"
+        }
+      ]
+    },
+    {
+      "id": "c6dfacd9-0495-43e5-954f-31040f722c8b",
+      "name": "Circle 2",
+      "users": [
+        {
+          "id": "5cb66dcd-2a4f-4c03-a1e7-688bbca58cca",
+          "name": "Steve"
+        },
+        {
+          "id": "90872c5c-83eb-40a9-a9e1-6020b5114309",
+          "name": "Tim"
+        },
+        {
+          "id": "c0419b05-ef98-4ba7-ad4a-97d9558a8a84",
+          "name": "Dan"
+        },
+        {
+          "id": "77725ad5-c018-4d87-8969-37493a3b1a28",
+          "name": "Jason"
+        }
+      ]
+    },
+    {
+      "id": "52b851d1-5f05-4c96-b009-34420cb49599",
+      "name": "Circle 3",
+      "users": [
+        {
+          "id": "80489d6d-c377-4e96-a561-349a1ac35bc8",
+          "name": "Larry"
+        },
+        {
+          "id": "91f8fdf5-4c06-4bda-952c-03062629e55d",
+          "name": "John"
+        },
+        {
+          "id": "1574bd03-08f1-4646-aaec-0d08e11ef635",
+          "name": "Mike"
+        }
+      ]
+    }
+  ]
+}
