@@ -17,20 +17,9 @@ class UserViewHolder(var mListItemBinding: UserItemBinding) :
         super.bind(model, position, listenerI, isSelectedItem)
         mListItemBinding.item = model
         if (isSelectedItem) {
-            mListItemBinding.tvHeadline.setBackgroundColor(
-                ContextCompat.getColor(
-                    mListItemBinding.root.context,
-                    android.R.color.darker_gray
-                )
-            )
+            mListItemBinding.tvHeadline.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.checkbox_on_background, 0);
         } else {
-            mListItemBinding.tvHeadline.setBackgroundColor(
-                ContextCompat.getColor(
-                    mListItemBinding.root.context,
-                    android.R.color.white
-                )
-            )
-
+            mListItemBinding.tvHeadline.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 
