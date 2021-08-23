@@ -8,7 +8,8 @@ import com.sushant.sampledemomvvmapicall.model.FeedItem
 import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.FeedRepository
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
-import io.reactivex.Single
+import com.sushant.sampledemomvvmapicall.service.socket.SocketResponse
+import io.reactivex.Observable
 import junit.framework.TestCase
 import org.junit.Assert
 import org.junit.Before
@@ -24,7 +25,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class DashboardViewModelTest : TestCase() {
     private val page =1
-    private lateinit var feedResponse: FeedResponse
+    private lateinit var feedResponse: SocketResponse
     private lateinit var list: ArrayList<FeedItem>
     private lateinit var viewModel: DashboardViewModel
     private lateinit var apiResponseObserver : Observer<ApiResponse<FeedResponse>>
@@ -50,7 +51,7 @@ class DashboardViewModelTest : TestCase() {
     @Test
     fun testGetFeedSuccessScenario(){
         viewModel.mApiResponseTest.observeForever(apiResponseObserver)
-        Mockito.`when`(repository.getFeeds(page)).thenReturn(Single.just(feedResponse))
+        Mockito.`when`(repository.getFeeds(page)).thenReturn(Observable.just(feedResponse))
         viewModel.getFeeds(page)
 
         Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
@@ -72,7 +73,7 @@ class DashboardViewModelTest : TestCase() {
     @Test
     fun testOnRefreshScenario(){
         viewModel.mApiResponseTest.observeForever(apiResponseObserver)
-        Mockito.`when`(repository.getFeeds(page)).thenReturn(Single.just(feedResponse))
+        Mockito.`when`(repository.getFeeds(page)).thenReturn(Observable.just(feedResponse))
         viewModel.onRefresh()
 
         Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
@@ -84,29 +85,28 @@ class DashboardViewModelTest : TestCase() {
     private fun mockRequiredData() {
         list = ArrayList()
         list.add(FeedItem().apply {
-                this.imageHref=""
-                this.title=""
-                this.description=""
+                this.city=""
+                this.aqi=12.2
             }
         )
         list.add(
             FeedItem().apply {
-                this.imageHref=""
-                this.title=""
-                this.description=""
+                this.city=""
+                this.aqi=12.2
             }
         )
         list.add(
             FeedItem().apply {
-                this.imageHref=""
-                this.title=""
-                this.description=""
+                this.city=""
+                this.aqi=12.2
             }
         )
-        feedResponse = FeedResponse().apply {
+        val feed =FeedResponse().apply {
             rows =list
-            title= "Dummy Title"
+            page = list.size
+            title = ""
         }
+        feedResponse = SocketResponse.SocketMessage(feed)
     }
 
 }

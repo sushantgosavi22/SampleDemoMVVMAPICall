@@ -7,4 +7,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--AQI color-->
+    <color name="good_color">#55a84e</color>
+    <color name="satisfactory_color">#a2c853</color>
+    <color name="moderate_color">#fff733</color>
+    <color name="poor_color">#f29c32</color>
+    <color name="very_poor_color">#e93f33</color>
+    <color name="severe_color">#af2d24</color>
+    <!--AQI color-->
 </resources>

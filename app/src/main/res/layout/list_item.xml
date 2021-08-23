@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
+        <import type="com.sushant.sampledemomvvmapicall.constant.Utils"/>
         <variable
             name="item"
             type="com.sushant.sampledemomvvmapicall.model.FeedItem" />
@@ -20,6 +22,7 @@
         app:cardCornerRadius="@dimen/dp_10"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="false"
+        bind:loadColor="@{item.aqi}"
         bind:targetApi="lollipop">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,44 +32,32 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{item.title??@string/not_applicable}"
-                android:textColor="@android:color/holo_blue_dark"
+                android:text="@{item.city??@string/not_applicable}"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/sp_20"
                 android:textStyle="bold"
+                tools:text="@tools:sample/cities"
+                android:layout_marginEnd="@dimen/dp_5"
+                app:layout_constraintRight_toLeftOf="@id/tvSubTitle"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvSubTitle"
-                android:layout_width="@dimen/dp_0"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_5"
-                android:layout_marginEnd="@dimen/dp_5"
-                android:layout_marginBottom="@dimen/dp_5"
-                android:layout_toStartOf="@+id/image"
-                android:text="@{item.description??@string/not_applicable}"
+                bind:bindAqi="@{item.aqi}"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/sp_16"
-                android:textStyle="italic"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/image"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+                android:textSize="@dimen/sp_20"
+                android:textStyle="normal"
+                tools:text="12.12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image"
-                android:layout_width="@dimen/dp_120"
-                android:layout_height="@dimen/dp_120"
-                android:layout_marginTop="@dimen/dp_5"
-                android:layout_marginEnd="@dimen/dp_10"
-                android:scaleType="fitXY"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-                app:shapeAppearanceOverlay="@style/roundedImageView"
-                app:srcCompat="@drawable/flower"
-                bind:loadUrl="@{item.imageHref}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

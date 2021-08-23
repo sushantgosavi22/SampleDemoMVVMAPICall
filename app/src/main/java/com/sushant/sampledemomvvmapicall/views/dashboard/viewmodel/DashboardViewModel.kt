@@ -6,33 +6,36 @@ import com.sushant.sampledemomvvmapicall.constant.Utils
 import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.IFeedRepository
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
+import com.sushant.sampledemomvvmapicall.service.socket.SocketResponse
 import com.sushant.sampledemomvvmapicall.views.base.BaseViewModel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 
 class DashboardViewModel(application: Application,private val mIFeedRepository : IFeedRepository, private val savedStateHandle: SavedStateHandle) : BaseViewModel(application) {
-    var mApiResponse : MutableLiveData<ApiResponse<FeedResponse>> = getPersistedFeedResponse()
+    private var mApiResponse : MutableLiveData<ApiResponse<FeedResponse>> = getPersistedFeedResponse()
     val mApiResponseTest: LiveData<ApiResponse<FeedResponse>> =mApiResponse
+    private val compositeDisposable  = CompositeDisposable()
     fun getFeeds(page : Int = Utils.FIRST_PAGE) {
-        mIFeedRepository.getFeeds(page)
-            .doOnSubscribe { disposable ->
+        compositeDisposable.add(mIFeedRepository.getFeeds(page)
+            .doOnSubscribe { _ ->
                 onShowLoading()
                 setFeedResponse(ApiResponse.loading())
-            }
-            .subscribe(object : DisposableSingleObserver<FeedResponse>() {
-                override fun onSuccess(t: FeedResponse) {
-                    if (page == Utils.FIRST_PAGE) {
+            }.subscribe {
+                when(it){
+                    is SocketResponse.SocketInit -> {
                         setFeedResponse(ApiResponse.clearListAndHideError())
                     }
-                    setFeedResponse(ApiResponse.success(t))
-                }
-
-                override fun onError(e: Throwable) {
-                    if (page == Utils.FIRST_PAGE) {
+                    is SocketResponse.SocketError -> {
                         setFeedResponse(ApiResponse.emptyList())
+                        setFeedResponse(ApiResponse.error(it.exception))
                     }
-                    setFeedResponse(ApiResponse.error(e))
+                    is SocketResponse.SocketMessage->{
+                        setFeedResponse(ApiResponse.success(it.feedResponse))
+                    }
                 }
             })
+
     }
 
 
@@ -47,6 +50,7 @@ class DashboardViewModel(application: Application,private val mIFeedRepository :
     }
 
     override fun onCleared() {
+        compositeDisposable.dispose()
         super.onCleared()
     }
 

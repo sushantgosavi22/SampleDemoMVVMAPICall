@@ -18,6 +18,12 @@ class ItemAdapter<T, out H : BaseViewHolder<T>>(val list : ArrayList<T>, private
         notifyDataSetChanged()
     }
 
+    fun updateList(mList : ArrayList<T>){
+        val startRange = list.size
+        list.addAll(mList)
+        notifyItemRangeChanged(startRange, mList.size)
+    }
+
     interface IAdapterItemListener<T> {
         fun onItemClick(pos: Int, data: T?)
         fun getHolder(parent: ViewGroup):BaseViewHolder<T>

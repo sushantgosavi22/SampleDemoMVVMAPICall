@@ -1,8 +1,8 @@
 package com.sushant.sampledemomvvmapicall.repositorys.feedrepo
 
-import com.sushant.sampledemomvvmapicall.model.FeedResponse
-import io.reactivex.Single
+import com.sushant.sampledemomvvmapicall.service.socket.SocketResponse
+import io.reactivex.Observable
 
 interface IFeedRepository {
-    fun getFeeds(page: Int) : Single<FeedResponse>
+    fun getFeeds(page: Int): Observable<SocketResponse>
 }

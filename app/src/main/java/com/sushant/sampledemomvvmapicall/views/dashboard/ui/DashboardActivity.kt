@@ -25,7 +25,7 @@ import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardView
 class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedItem> {
 
     private lateinit var dashboardViewModel: DashboardViewModel
-    lateinit var binding: ActivityDashboardBinding
+    private lateinit var binding: ActivityDashboardBinding
     private val adapter by lazy {
         ItemAdapter(ArrayList(),this)
     }
@@ -63,7 +63,10 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
      * */
     private fun consumeResponse(apiResponse: ApiResponse<FeedResponse>?) {
         when (apiResponse?.status) {
-            Status.LOADING -> dashboardViewModel.onShowLoading()
+            Status.LOADING -> {
+                adapter.setList(ArrayList())
+                dashboardViewModel.onShowLoading()
+            }
             Status.CLEAR_LIST_HIDE_ERROR -> {
                 showErrorView(false)
             }
@@ -88,7 +91,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
 
     private fun handleSuccessResponse(feedResponse : FeedResponse?){
         title = feedResponse?.title
-        feedResponse?.rows?.let { adapter.setList(it) }
+        feedResponse?.rows?.let { adapter.updateList(it) }
     }
 
     private fun showErrorView(error:Boolean){
