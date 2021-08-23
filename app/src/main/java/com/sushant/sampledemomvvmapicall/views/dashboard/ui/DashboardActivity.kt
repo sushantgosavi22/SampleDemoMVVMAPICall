@@ -1,5 +1,6 @@
 package com.sushant.sampledemomvvmapicall.views.dashboard.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ import com.sushant.sampledemomvvmapicall.views.adapter.ItemAdapter
 import com.sushant.sampledemomvvmapicall.views.adapter.FeedNewsViewHolder
 import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel
+import com.sushant.sampledemomvvmapicall.views.details.ui.DetailsActivity
 
 class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedItem> {
 
@@ -109,7 +111,9 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
         }
     }
 
-    override fun onItemClick(pos: Int, data: FeedItem?) {}
+    override fun onItemClick(pos: Int, data: FeedItem?) {
+        startActivity(Intent(this,DetailsActivity::class.java).apply { putExtra(Utils.KEY_ITEM,data) })
+    }
     override fun getHolder(parent: ViewGroup): BaseViewHolder<FeedItem> {
         return FeedNewsViewHolder.getInstance(parent)
     }

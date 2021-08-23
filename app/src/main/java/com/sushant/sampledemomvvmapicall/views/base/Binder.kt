@@ -29,6 +29,8 @@ object Binder {
     @BindingAdapter("bind:bindAqi")
     @JvmStatic
     public fun bindAqi(view: TextView, aqi: Double?) {
-        view.text = DecimalFormat("#.##").format(aqi)
+        aqi?.let {
+            view.text = DecimalFormat("#.##").format(it).toString()
+        }
     }
 }

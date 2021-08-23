@@ -14,7 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-        archivesBaseName = "WiproCodeingAssignment-${versionCode}-${versionName}-${new Date().format('yyMMdd')}"
+        archivesBaseName = "ProximityCodeingAssignment-${versionCode}-${versionName}-${new Date().format('yyMMdd')}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

@@ -11,6 +11,7 @@ import java.util.regex.Pattern
 
 object Utils {
 
+    const val KEY_ITEM: String = "key_item"
     const val PERSISTED: String = "persisted"
     const val RESPONSE: String = "response"
     const val FIRST_PAGE: Int = 1
