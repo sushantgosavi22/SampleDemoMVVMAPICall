@@ -1,13 +1,15 @@
 package com.sushant.sampledemomvvmapicall.service.interfaces
+import com.sushant.sampledemomvvmapicall.model.FeedItem
 import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import io.reactivex.Single
+import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 
 interface ApiInterface {
 
-    @GET("s/2iodh4vg0eortkl/facts.json")
-    fun getFeeds(@Query("page") page: Int?): Single<FeedResponse>
+    @GET("/jokes/ten")
+    fun getFeeds(): Single<List<FeedItem>>
 
 }

@@ -31,12 +31,13 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{item.title??@string/not_applicable}"
+                bind:type="@{item.type}"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="@dimen/sp_20"
                 android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -46,27 +47,28 @@
                 android:layout_marginTop="@dimen/dp_5"
                 android:layout_marginEnd="@dimen/dp_5"
                 android:layout_marginBottom="@dimen/dp_5"
-                android:layout_toStartOf="@+id/image"
-                android:text="@{item.description??@string/not_applicable}"
+                android:text="@{item.setup??@string/not_applicable}"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="italic"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image"
-                android:layout_width="@dimen/dp_120"
-                android:layout_height="@dimen/dp_120"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvSubSubTitle"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_5"
-                android:layout_marginEnd="@dimen/dp_10"
-                android:scaleType="fitXY"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-                app:shapeAppearanceOverlay="@style/roundedImageView"
-                app:srcCompat="@drawable/flower"
-                bind:loadUrl="@{item.imageHref}" />
+                android:layout_marginEnd="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:text="@{item.punchline??@string/not_applicable}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSubTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -16,27 +16,30 @@ import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.FeedRepository
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
 import com.sushant.sampledemomvvmapicall.service.model.Status
+import com.sushant.sampledemomvvmapicall.service.provider.ServiceProvider
 import com.sushant.sampledemomvvmapicall.views.adapter.BaseViewHolder
 import com.sushant.sampledemomvvmapicall.views.adapter.ItemAdapter
 import com.sushant.sampledemomvvmapicall.views.adapter.FeedNewsViewHolder
 import com.sushant.sampledemomvvmapicall.views.base.BaseActivity
 import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel
+import com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModelFactory
 
 class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedItem> {
 
     private lateinit var dashboardViewModel: DashboardViewModel
-    lateinit var binding: ActivityDashboardBinding
+    private lateinit var binding: ActivityDashboardBinding
     private val adapter by lazy {
-        ItemAdapter(ArrayList(),this)
+        ItemAdapter(ArrayList(), this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         binding.lifecycleOwner = this
-        dashboardViewModel = ViewModelProviders.of(this,
-            DashboardViewModel.DashboardViewModelFactory(application,FeedRepository(), SavedStateHandle()))
-            .get(DashboardViewModel::class.java)
+        title = getString(R.string.app_name)
+        dashboardViewModel =
+            ViewModelProviders.of(this, DashboardViewModelFactory(application, SavedStateHandle()))
+                .get(DashboardViewModel::class.java)
         binding.viewModel = dashboardViewModel
         initAdapter()
         requestFeed()
@@ -52,7 +55,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
          * In the case of activity recreated eg. screen rotation, config changes
          * Then restore the persisted data [remove extra api/database call ]
          */
-        if(dashboardViewModel.isPersistedAvailable().value==false){
+        if (dashboardViewModel.isPersistedAvailable().value == false) {
             dashboardViewModel.getFeeds()
             dashboardViewModel.setPersisted(true)
         }
@@ -71,7 +74,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
             Status.SUCCESS -> {
                 showErrorView(false)
                 dashboardViewModel.onStopLoading()
-                val feedResponse =apiResponse.response as FeedResponse
+                val feedResponse = apiResponse.response as FeedResponse
                 handleSuccessResponse(feedResponse)
             }
             Status.ERROR -> {
@@ -79,20 +82,19 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
                 showErrorView(true)
                 Utils.showToast(this, apiResponse.error?.message)
             }
-            else ->{
+            else -> {
                 showErrorView(false)
                 dashboardViewModel.onStopLoading()
             }
         }
     }
 
-    private fun handleSuccessResponse(feedResponse : FeedResponse?){
-        title = feedResponse?.title
+    private fun handleSuccessResponse(feedResponse: FeedResponse?) {
         feedResponse?.rows?.let { adapter.setList(it) }
     }
 
-    private fun showErrorView(error:Boolean){
-        binding.errorView.visibility = if(error) View.VISIBLE else View.GONE
+    private fun showErrorView(error: Boolean) {
+        binding.errorView.visibility = if (error) View.VISIBLE else View.GONE
     }
 
     private fun initAdapter() {
@@ -100,7 +102,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
-        binding.swipeRefreshLayout.setOnRefreshListener{
+        binding.swipeRefreshLayout.setOnRefreshListener {
             dashboardViewModel.onRefresh()
             requestFeed()
         }
@@ -110,7 +112,6 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
     override fun getHolder(parent: ViewGroup): BaseViewHolder<FeedItem> {
         return FeedNewsViewHolder.getInstance(parent)
     }
-
 
 
 }

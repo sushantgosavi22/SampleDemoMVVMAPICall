@@ -50,10 +50,10 @@ class DashboardViewModelTest : TestCase() {
     @Test
     fun testGetFeedSuccessScenario(){
         viewModel.mApiResponseTest.observeForever(apiResponseObserver)
-        Mockito.`when`(repository.getFeeds(page)).thenReturn(Single.just(feedResponse))
-        viewModel.getFeeds(page)
+        Mockito.`when`(repository.getFeeds()).thenReturn(Single.just(feedResponse))
+        viewModel.getFeeds()
 
-        Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
+        Mockito.verify(repository, Mockito.times(1)).getFeeds()
         val response = viewModel.mApiResponseTest.value?.response as FeedResponse
         Assert.assertEquals(response.rows?.size, 3)
     }
@@ -62,8 +62,8 @@ class DashboardViewModelTest : TestCase() {
     @Test(expected = Exception::class)
     fun testGetFeedFailedScenario(){
         viewModel.mApiResponseTest.observeForever(apiResponseObserver)
-        Mockito.doThrow(Throwable()).`when`(repository).getFeeds(page)
-        viewModel.getFeeds(page)
+        Mockito.doThrow(Throwable()).`when`(repository).getFeeds()
+        viewModel.getFeeds()
         Assert.assertNull(viewModel.mApiResponseTest.value?.response)
     }
 
@@ -72,10 +72,10 @@ class DashboardViewModelTest : TestCase() {
     @Test
     fun testOnRefreshScenario(){
         viewModel.mApiResponseTest.observeForever(apiResponseObserver)
-        Mockito.`when`(repository.getFeeds(page)).thenReturn(Single.just(feedResponse))
+        Mockito.`when`(repository.getFeeds()).thenReturn(Single.just(feedResponse))
         viewModel.onRefresh()
 
-        Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
+        Mockito.verify(repository, Mockito.times(1)).getFeeds()
         val response = viewModel.mApiResponseTest.value?.response as FeedResponse
         Assert.assertEquals(response.rows?.size, 3)
     }
@@ -85,22 +85,22 @@ class DashboardViewModelTest : TestCase() {
         list = ArrayList()
         list.add(FeedItem().apply {
                 this.imageHref=""
-                this.title=""
-                this.description=""
+                this.type=""
+                this.setup=""
             }
         )
         list.add(
             FeedItem().apply {
                 this.imageHref=""
-                this.title=""
-                this.description=""
+                this.type=""
+                this.setup=""
             }
         )
         list.add(
             FeedItem().apply {
                 this.imageHref=""
-                this.title=""
-                this.description=""
+                this.type=""
+                this.setup=""
             }
         )
         feedResponse = FeedResponse().apply {

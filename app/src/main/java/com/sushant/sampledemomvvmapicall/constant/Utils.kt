@@ -9,6 +9,7 @@ import android.widget.Toast
 
 object Utils {
 
+    const val baseURL: String = "https://official-joke-api.appspot.com/"
     const val PERSISTED: String = "persisted"
     const val RESPONSE: String = "response"
     const val FIRST_PAGE: Int = 1

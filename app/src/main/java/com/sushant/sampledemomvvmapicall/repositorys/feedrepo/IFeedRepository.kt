@@ -4,5 +4,5 @@ import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import io.reactivex.Single
 
 interface IFeedRepository {
-    fun getFeeds(page: Int) : Single<FeedResponse>
+    fun getFeeds(): Single<FeedResponse>
 }
