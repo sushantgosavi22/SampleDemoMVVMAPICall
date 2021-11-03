@@ -42,7 +42,7 @@ class DashboardViewModel(application: Application,private val mIFeedRepository :
         getFeeds()
     }
 
-    fun getUserApiResponse(): MutableLiveData<ApiResponse<FeedResponse>> {
+    fun getFeedApiResponse(): MutableLiveData<ApiResponse<FeedResponse>> {
         return mApiResponse
     }
 

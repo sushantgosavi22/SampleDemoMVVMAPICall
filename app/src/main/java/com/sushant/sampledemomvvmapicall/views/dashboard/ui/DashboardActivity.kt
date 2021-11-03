@@ -43,7 +43,7 @@ class DashboardActivity : BaseActivity(), ItemAdapter.IAdapterItemListener<FeedI
     }
 
     private fun requestFeed() {
-        dashboardViewModel.getUserApiResponse().observe(this, Observer {
+        dashboardViewModel.getFeedApiResponse().observe(this, Observer {
             consumeResponse(it)
         })
 
