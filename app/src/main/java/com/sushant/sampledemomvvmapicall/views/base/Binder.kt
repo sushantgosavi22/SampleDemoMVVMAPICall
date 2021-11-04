@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.sushant.sampledemomvvmapicall.R
 import com.sushant.sampledemomvvmapicall.constant.Utils
 import java.io.File
+import java.text.DecimalFormat
 
 
 object Binder {
@@ -21,6 +22,23 @@ object Binder {
                 .placeholder(R.drawable.flower)
                 .error(R.drawable.flower)
                 .into(view)
+        }
+    }
+
+
+    @BindingAdapter("bind:bindPrice")
+    @JvmStatic
+    public fun bindPrice(view: TextView, value: String?) {
+        if(!value.isNullOrEmpty()){
+            view.text = String.format("%s%.2f","$", value.toFloat())
+        }
+    }
+
+    @BindingAdapter("bind:bind24Hour")
+    @JvmStatic
+    public fun bind24Hour(view: TextView, value: String?) {
+        if(!value.isNullOrEmpty()){
+            view.text = String.format("%.2f%s", value.toFloat(),"%")
         }
     }
 }

@@ -12,6 +12,8 @@ object Utils {
     const val PERSISTED: String = "persisted"
     const val RESPONSE: String = "response"
     const val FIRST_PAGE: Int = 1
+    const val FEED_LIMIT: Int = 20
+    const val FEED_DEFAULT_OFFSET: Int = 0
 
     fun showToast(context: Context?, message: String?) {
         context?.let {

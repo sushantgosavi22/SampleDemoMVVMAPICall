@@ -49,37 +49,32 @@ class DashboardViewModelTest : TestCase() {
 
     @Test
     fun testGetFeedSuccessScenario(){
-        viewModel.mApiResponseTest.observeForever(apiResponseObserver)
-        Mockito.`when`(repository.getFeeds(page)).thenReturn(Single.just(feedResponse))
+        viewModel.apiResponseTest.observeForever(apiResponseObserver)
+        Mockito.`when`(repository.getFeeds(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Single.just(feedResponse))
         viewModel.getFeeds(page)
 
-        Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
-        val response = viewModel.mApiResponseTest.value?.response as FeedResponse
-        Assert.assertEquals(response.rows?.size, 3)
+        Mockito.verify(repository, Mockito.times(1)).getFeeds(limit = Mockito.anyInt(),offset = Mockito.anyInt())
+        val response = viewModel.apiResponseTest.value?.response as FeedResponse
+        Assert.assertEquals(response.data?.size, 3)
     }
 
 
     @Test(expected = Exception::class)
     fun testGetFeedFailedScenario(){
-        viewModel.mApiResponseTest.observeForever(apiResponseObserver)
-        Mockito.doThrow(Throwable()).`when`(repository).getFeeds(page)
+        viewModel.apiResponseTest.observeForever(apiResponseObserver)
+        Mockito.doThrow(Throwable()).`when`(repository).getFeeds(limit = 0,offset = page)
         viewModel.getFeeds(page)
-        Assert.assertNull(viewModel.mApiResponseTest.value?.response)
+        Assert.assertNull(viewModel.apiResponseTest.value?.response)
     }
-
-
 
     @Test
-    fun testOnRefreshScenario(){
-        viewModel.mApiResponseTest.observeForever(apiResponseObserver)
-        Mockito.`when`(repository.getFeeds(page)).thenReturn(Single.just(feedResponse))
-        viewModel.onRefresh()
-
-        Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
-        val response = viewModel.mApiResponseTest.value?.response as FeedResponse
-        Assert.assertEquals(response.rows?.size, 3)
+    fun setPersisted(){
+        val shouldPersist = true
+        val persistence = viewModel.isPersistedAvailable()
+        assertFalse(persistence.value == true)
+        viewModel.setPersisted(shouldPersist)
+        assertTrue(persistence.value == true)
     }
-
 
     private fun mockRequiredData() {
         list = ArrayList()
@@ -104,7 +99,7 @@ class DashboardViewModelTest : TestCase() {
             }
         )
         feedResponse = FeedResponse().apply {
-            rows =list
+            data =list
             title= "Dummy Title"
         }
     }

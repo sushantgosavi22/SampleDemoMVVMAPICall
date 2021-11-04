@@ -9,7 +9,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object APIClient {
 
-    private const val baseURL: String = "https://dl.dropboxusercontent.com/"
+    //https://api.coincap.io/v2/assets
+    private const val baseURL: String = "https://api.coincap.io/"
     val client: Retrofit by lazy {
         Retrofit.Builder()
                 .baseUrl(baseURL)

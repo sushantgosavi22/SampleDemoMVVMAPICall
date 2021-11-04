@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface ApiInterface {
 
-    @GET("s/2iodh4vg0eortkl/facts.json")
-    fun getFeeds(@Query("page") page: Int?): Single<FeedResponse>
+    @GET("v2/assets")
+    fun getFeeds(@Query("limit") limit: Int?=0,@Query("offset") offset: Int? = 0): Single<FeedResponse>
 
 }

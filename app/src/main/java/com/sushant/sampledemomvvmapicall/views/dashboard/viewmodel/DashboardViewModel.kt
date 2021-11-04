@@ -7,47 +7,40 @@ import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.IFeedRepository
 import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
 import com.sushant.sampledemomvvmapicall.views.base.BaseViewModel
-import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 
 class DashboardViewModel(application: Application,private val mIFeedRepository : IFeedRepository, private val savedStateHandle: SavedStateHandle) : BaseViewModel(application) {
-    var mApiResponse : MutableLiveData<ApiResponse<FeedResponse>> = getPersistedFeedResponse()
-    val mApiResponseTest: LiveData<ApiResponse<FeedResponse>> =mApiResponse
-    fun getFeeds(page : Int = Utils.FIRST_PAGE) {
-        mIFeedRepository.getFeeds(page)
-            .doOnSubscribe { disposable ->
+    var apiResponse : MutableLiveData<ApiResponse<FeedResponse>> = getPersistedFeedResponse()
+    val apiResponseTest: LiveData<ApiResponse<FeedResponse>> =apiResponse
+    private val compositeDisposable = CompositeDisposable()
+
+    fun getFeeds(offset: Int = Utils.FEED_DEFAULT_OFFSET) {
+        compositeDisposable += mIFeedRepository.getFeeds(Utils.FEED_LIMIT, offset)
+            .doOnSubscribe {
                 onShowLoading()
                 setFeedResponse(ApiResponse.loading())
             }
-            .subscribe(object : DisposableSingleObserver<FeedResponse>() {
-                override fun onSuccess(t: FeedResponse) {
-                    if (page == Utils.FIRST_PAGE) {
-                        setFeedResponse(ApiResponse.clearListAndHideError())
-                    }
-                    setFeedResponse(ApiResponse.success(t))
+            .subscribeBy(
+                onError = {
+                    setFeedResponse(ApiResponse.error(it))
+                },
+                onSuccess = {
+                    if (offset == Utils.FEED_DEFAULT_OFFSET) setFeedResponse(ApiResponse.clearListAndHideError())
+                    setFeedResponse(ApiResponse.success(it))
                 }
-
-                override fun onError(e: Throwable) {
-                    if (page == Utils.FIRST_PAGE) {
-                        setFeedResponse(ApiResponse.emptyList())
-                    }
-                    setFeedResponse(ApiResponse.error(e))
-                }
-            })
+            )
     }
 
-
-    fun onRefresh() {
-        resetPageCount()
-        onShowLoading()
-        getFeeds()
-    }
 
     fun getFeedApiResponse(): MutableLiveData<ApiResponse<FeedResponse>> {
-        return mApiResponse
+        return apiResponse
     }
 
     override fun onCleared() {
         super.onCleared()
+        compositeDisposable.clear()
     }
 
 

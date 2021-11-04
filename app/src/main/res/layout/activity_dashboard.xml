@@ -1,40 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="viewModel"
             type="com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel.DashboardViewModel" />
     </data>
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/errorView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:drawablePadding="16dp"
-            android:drawableTop="@android:drawable/stat_notify_error"
+            android:gravity="center"
             android:padding="16dp"
             android:text="@string/user_list_error"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
-        <com.sushant.sampledemomvvmapicall.views.base.CustomSwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
-            android:layout_width="match_parent"
-            app:refreshing="@{viewModel.isLoading()}"
-            android:layout_height="match_parent">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:scrollbars="vertical"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:weightSum="100">
 
-        </com.sushant.sampledemomvvmapicall.views.base.CustomSwipeRefreshLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvRank"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_5"
+                    android:layout_weight="10"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/sp_16"
+                    android:text="@string/hash"
+                    tools:text="1" />
 
-    </FrameLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_5"
+                    android:layout_weight="40"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold"
+                    android:text="@string/name"
+                    tools:text="Bitcoin" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSubTitle"
+                    android:layout_weight="25"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_5"
+                    android:layout_marginEnd="@dimen/dp_5"
+                    android:text="@string/hour_24"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/sp_16"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSubSubTitle"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_5"
+                    android:layout_marginEnd="@dimen/dp_5"
+                    android:layout_weight="25"
+                    android:text="@string/price"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/sp_16" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.sushant.sampledemomvvmapicall.views.base.CustomSwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                app:refreshing="@{viewModel.isLoading()}"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:scrollbars="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.sushant.sampledemomvvmapicall.views.base.CustomSwipeRefreshLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

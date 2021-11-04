@@ -9,8 +9,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 open class FeedRepository : IFeedRepository {
     var mIServiceProvider: IServiceProvider = ServiceProvider
 
-    override fun getFeeds(page: Int): Single<FeedResponse> {
-        return mIServiceProvider.getFeeds(page).observeOn(AndroidSchedulers.mainThread())
+    override fun getFeeds(limit: Int, offset: Int): Single<FeedResponse> {
+        return mIServiceProvider.getFeeds(limit, offset).observeOn(AndroidSchedulers.mainThread())
     }
 
 }
