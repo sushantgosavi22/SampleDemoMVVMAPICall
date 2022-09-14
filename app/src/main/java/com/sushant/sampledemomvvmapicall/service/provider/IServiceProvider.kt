@@ -1,8 +1,8 @@
 package com.sushant.sampledemomvvmapicall.service.provider
 
-import com.sushant.sampledemomvvmapicall.service.socket.SocketResponse
+import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import io.reactivex.Observable
 
 interface IServiceProvider {
-    fun getFeeds(page: Int): Observable<SocketResponse>
+    fun getFeeds(page: Int): Observable<FeedResponse>
 }

@@ -56,7 +56,7 @@ class DashboardViewModelTest : TestCase() {
 
         Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
         val response = viewModel.mApiResponseTest.value?.response as FeedResponse
-        Assert.assertEquals(response.rows?.size, 3)
+        Assert.assertEquals(response.pets?.size, 3)
     }
 
 
@@ -78,33 +78,31 @@ class DashboardViewModelTest : TestCase() {
 
         Mockito.verify(repository, Mockito.times(1)).getFeeds(page)
         val response = viewModel.mApiResponseTest.value?.response as FeedResponse
-        Assert.assertEquals(response.rows?.size, 3)
+        Assert.assertEquals(response.pets?.size, 3)
     }
 
 
     private fun mockRequiredData() {
         list = ArrayList()
         list.add(FeedItem().apply {
-                this.city=""
+                this.title=""
                 this.aqi=12.2
             }
         )
         list.add(
             FeedItem().apply {
-                this.city=""
+                this.title=""
                 this.aqi=12.2
             }
         )
         list.add(
             FeedItem().apply {
-                this.city=""
+                this.title=""
                 this.aqi=12.2
             }
         )
         val feed =FeedResponse().apply {
-            rows =list
-            page = list.size
-            title = ""
+            pets =list
         }
         feedResponse = SocketResponse.SocketMessage(feed)
     }

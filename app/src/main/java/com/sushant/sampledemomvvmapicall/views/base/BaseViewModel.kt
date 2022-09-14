@@ -3,16 +3,16 @@ package com.sushant.sampledemomvvmapicall.views.base
 import android.app.Application
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.sushant.sampledemomvvmapicall.constant.Utils
-import com.sushant.sampledemomvvmapicall.model.FeedResponse
-import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
+import com.sushant.sampledemomvvmapicall.constant.Constant
+import io.reactivex.disposables.CompositeDisposable
 
 
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
-    protected var page = Utils.FIRST_PAGE
+    private var page = Constant.FIRST_PAGE
+
+    val compositeDisposable = CompositeDisposable()
+
     /**
      * Observer SwipeToRefresh
      */
@@ -28,15 +28,12 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      */
     fun onStopLoading() = isLoading.set(false)
 
-    /**
-     * increment Page Count value.
-     */
-    fun incrementPageCount() = page++
-
-    fun resetPageCount()  {
-        page =Utils.FIRST_PAGE
+    fun resetPageCount() {
+        page = Constant.FIRST_PAGE
     }
+
     override fun onCleared() {
+        compositeDisposable.dispose()
         super.onCleared()
     }
 }

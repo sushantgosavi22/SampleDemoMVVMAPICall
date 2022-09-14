@@ -1,10 +1,7 @@
 package com.sushant.sampledemomvvmapicall.views.base
 
-import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.sushant.sampledemomvvmapicall.R
 
 open class BaseActivity : AppCompatActivity() {

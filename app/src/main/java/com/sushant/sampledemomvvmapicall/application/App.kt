@@ -3,17 +3,14 @@ package com.sushant.sampledemomvvmapicall.application
 import android.app.Application
 import android.content.Context
 
-class App: Application() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        context =this
+        appContext = this
     }
 
-    companion object{
-        private lateinit var context: Context
-        fun getApplicationContext(): Context {
-            return context
-        }
+    companion object {
+        lateinit var appContext: App private set
     }
 }

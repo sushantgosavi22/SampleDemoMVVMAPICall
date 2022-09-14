@@ -1,36 +1,33 @@
 package com.sushant.sampledemomvvmapicall.views.base
 
-import android.view.View
-import android.widget.TextView
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.sushant.sampledemomvvmapicall.R
-import java.text.DecimalFormat
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 
 object Binder {
 
-    @BindingAdapter("bind:loadColor")
+    @BindingAdapter("bind:bindUrlImage")
     @JvmStatic
-    public fun bindColor(view: View, aqi: Double?) {
-        val color = when (aqi?.toInt()) {
-            in 0..50 -> R.color.good_color
-            in 51..100 -> R.color.satisfactory_color
-            in 101..200 -> R.color.moderate_color
-            in 201..300 -> R.color.poor_color
-            in 301..400 -> R.color.very_poor_color
-            in 401..500 -> R.color.severe_color
-            else -> R.color.severe_color
+    public fun bindUrlImage(view: AppCompatImageView, url: String?) {
+        url?.let {
+            val options: RequestOptions = RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.flower)
+                .error(R.drawable.flower)
+            Glide.with(view).load(url).apply(options).into(view)
         }
-        view.setBackgroundResource(color)
     }
 
-    @BindingAdapter("bind:bindAqi")
+    @BindingAdapter("bind:bindWebUrl")
     @JvmStatic
-    public fun bindAqi(view: TextView, aqi: Double?) {
-        aqi?.let {
-            view.text = DecimalFormat("#.##").format(it).toString()
+    public fun bindWebUrl(webView: WebView, url: String?) {
+        url?.let {
+            webView.loadUrl(url)
         }
     }
 }

@@ -17,10 +17,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:drawablePadding="16dp"
-            android:drawableTop="@android:drawable/stat_notify_error"
             android:padding="16dp"
             android:text="@string/user_list_error"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:drawableTopCompat="@android:drawable/stat_notify_error" />
 
         <com.sushant.sampledemomvvmapicall.views.base.CustomSwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"

@@ -2,40 +2,42 @@ package com.sushant.sampledemomvvmapicall.views.dashboard.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.sushant.sampledemomvvmapicall.constant.Utils
+import com.sushant.sampledemomvvmapicall.constant.Constant
+import com.sushant.sampledemomvvmapicall.model.ConfigError
+import com.sushant.sampledemomvvmapicall.model.DataResponse
 import com.sushant.sampledemomvvmapicall.model.FeedResponse
 import com.sushant.sampledemomvvmapicall.repositorys.feedrepo.IFeedRepository
-import com.sushant.sampledemomvvmapicall.service.model.ApiResponse
-import com.sushant.sampledemomvvmapicall.service.socket.SocketResponse
 import com.sushant.sampledemomvvmapicall.views.base.BaseViewModel
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
-import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
 
-class DashboardViewModel(application: Application,private val mIFeedRepository : IFeedRepository, private val savedStateHandle: SavedStateHandle) : BaseViewModel(application) {
-    private var mApiResponse : MutableLiveData<ApiResponse<FeedResponse>> = getPersistedFeedResponse()
-    val mApiResponseTest: LiveData<ApiResponse<FeedResponse>> =mApiResponse
-    private val compositeDisposable  = CompositeDisposable()
-    fun getFeeds(page : Int = Utils.FIRST_PAGE) {
-        compositeDisposable.add(mIFeedRepository.getFeeds(page)
+class DashboardViewModel(
+    application: Application,
+    private val mIFeedRepository: IFeedRepository,
+    private val savedStateHandle: SavedStateHandle
+) : BaseViewModel(application) {
+    private var mApiResponse: MutableLiveData<DataResponse<FeedResponse>> =
+        getPersistedFeedResponse()
+    val mApiResponseTest: LiveData<DataResponse<FeedResponse>> = mApiResponse
+
+    fun getFeeds(page: Int = Constant.FIRST_PAGE) {
+        val disposable = mIFeedRepository.getFeeds(page)
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { _ ->
                 onShowLoading()
-                setFeedResponse(ApiResponse.loading())
-            }.subscribe {
-                when(it){
-                    is SocketResponse.SocketInit -> {
-                        setFeedResponse(ApiResponse.clearListAndHideError())
-                    }
-                    is SocketResponse.SocketError -> {
-                        setFeedResponse(ApiResponse.emptyList())
-                        setFeedResponse(ApiResponse.error(it.exception))
-                    }
-                    is SocketResponse.SocketMessage->{
-                        setFeedResponse(ApiResponse.success(it.feedResponse))
-                    }
+                setFeedResponse(DataResponse.loading())
+            }.doOnError { error ->
+                if (error is ConfigError) {
+                    setFeedResponse(DataResponse.configError(error))
+                } else {
+                    setFeedResponse(DataResponse.error(error))
                 }
+            }.subscribe({
+                setFeedResponse(DataResponse.success(it))
+            }, {
+                setFeedResponse(DataResponse.error(it))
             })
 
+        compositeDisposable.add(disposable)
     }
 
 
@@ -45,25 +47,31 @@ class DashboardViewModel(application: Application,private val mIFeedRepository :
         getFeeds()
     }
 
-    fun getUserApiResponse(): MutableLiveData<ApiResponse<FeedResponse>> {
-        return mApiResponse
-    }
+    fun getUserApiResponse(): MutableLiveData<DataResponse<FeedResponse>> = mApiResponse
 
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
-    }
+    private fun setFeedResponse(response: DataResponse<FeedResponse>) =
+        savedStateHandle.set(Constant.RESPONSE, response)
 
+    private fun getPersistedFeedResponse(): MutableLiveData<DataResponse<FeedResponse>> =
+        savedStateHandle.getLiveData(Constant.RESPONSE)
 
-    private fun setFeedResponse(response: ApiResponse<FeedResponse>) =savedStateHandle.set(Utils.RESPONSE, response)
-    private fun getPersistedFeedResponse() : MutableLiveData<ApiResponse<FeedResponse>> =savedStateHandle.getLiveData(Utils.RESPONSE)
-    fun isPersistedAvailable() :LiveData<Boolean> = savedStateHandle.getLiveData<Boolean>(Utils.PERSISTED,false)
-    fun setPersisted(boolean: Boolean) = savedStateHandle.set(Utils.PERSISTED,boolean)
+    fun isPersistedAvailable(): LiveData<Boolean> =
+        savedStateHandle.getLiveData<Boolean>(Constant.PERSISTED, false)
 
-    class DashboardViewModelFactory(private var app: Application,private var repo: IFeedRepository,private var mSavedStateHandle : SavedStateHandle) :
+    fun setPersisted(boolean: Boolean) = savedStateHandle.set(Constant.PERSISTED, boolean)
+
+    class DashboardViewModelFactory(
+        private var app: Application,
+        private var repo: IFeedRepository,
+        private var mSavedStateHandle: SavedStateHandle
+    ) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return modelClass.getConstructor(Application::class.java,IFeedRepository::class.java,SavedStateHandle::class.java).newInstance(app,repo,mSavedStateHandle)
+            return modelClass.getConstructor(
+                Application::class.java,
+                IFeedRepository::class.java,
+                SavedStateHandle::class.java
+            ).newInstance(app, repo, mSavedStateHandle)
         }
     }
 }
