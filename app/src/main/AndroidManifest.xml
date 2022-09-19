@@ -1,27 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sushant.sampledemomvvmapicall">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.android.sampledemomvvmapicall.github">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <application
-        android:allowBackup="true"
-        android:name=".application.App"
-        android:icon="@drawable/app_icon_news"
+        android:name="com.android.sampledemomvvmapicall.github.GithubApp"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_baseline_app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/app_icon_news"
+        android:roundIcon="@drawable/ic_baseline_app_icon"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
-        android:theme="@style/Theme.SampleDemoMVVMAPICall">
-        <activity android:name=".views.dashboard.ui.DashboardActivity">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="com.android.sampledemomvvmapicall.github.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.details.ui.DetailsActivity"/>
     </application>
-
 </manifest>

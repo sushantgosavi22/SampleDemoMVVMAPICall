@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:startDestination="@id/searchFragment">
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.android.sampledemomvvmapicall.github.ui.search.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/showRepo"
+            app:destination="@id/repoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/repoFragment"
+        android:name="com.android.sampledemomvvmapicall.github.ui.repo.RepoFragment"
+        android:label="RepoFragment" >
+        <argument
+            android:name="owner"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="avatarUrl"
+            app:argType="string"
+            app:nullable="true"/>
+
+    </fragment>
+
+</navigation>
